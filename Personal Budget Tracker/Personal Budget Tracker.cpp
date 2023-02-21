@@ -1,0 +1,273 @@
+/*Adam Scibelli- */
+
+#include "Accounts.h"
+#include "Budget.h"
+#include "SavingFor.h"
+#include <iostream>
+#include <iomanip> //for setprecision in calcCurrCashFlow()
+using namespace std;
+
+int main()
+{
+	time_t rawtime;   //for use with getting the current day and time.
+	struct tm timeinfo;
+	time(&rawtime);
+	localtime_s(&timeinfo, &rawtime);
+	char buffer[70];
+	strftime(buffer, 70, "%m/%d/%Y", &timeinfo);  //formats today's day into string buffer.
+
+
+	/* Pass in beginning cash flow value and .csv file name.*/
+	Accounts master((float)500, "MasterAccounts.csv");
+	Budget budget("Budget.csv", buffer, master);
+	SavingFor saving("Saving.csv", buffer);
+
+	cout << "Hello, today is " << buffer << ". " << endl;
+	cout << "Your current cash flow is $" << fixed << setprecision(2) << master.calcCurrCashFlow() << "." << endl;  //only print out two decimal places because it's currency.
+	budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master);     //print out expected month end cash flow.
+	budget.budgetAlerts();                   //print out alerts for over budget categories.
+	cout << endl;
+
+
+	while (1) {
+		int option = 0;     //user enter a number from the menu based on what they want to do.
+		cout << "Welcome to the main menu." << endl;
+		cout << "What would you like to do?" << endl;
+		cout << "Enter 1 to see historical transactions and balances." << endl;
+		cout << "Enter 2 to creat/change a budget plan and track your budget." << endl;
+		cout << "Enter 3 to plan for future purchases." << endl;
+		cout << "Enter 4 to quit the program." << endl;
+		cin >> option;          //reads input.
+		while (cin.fail() || option < 1 || option > 4) {  //input can't be non integer characters or integers not 1-4.
+			cout << "Sorry, that is not valid input. Please try again. " << endl;
+			cin.clear();        //clears error if users enters a string.
+			cin.ignore(256, '\n');  //ignores up to 256 characters in the last user input.
+			cin >> option;   //takes new input.
+		}
+		switch (option) {
+		case 1: {
+			int answer = 0;
+			do {   //stay in this menu on a loop until user presses 5 to go back or 6 to quit.
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+				cout << "How would you like to view your history?" << endl;
+				cout << "Enter 1 to see all transactions in specific month." << endl;
+				cout << "Enter 2 to see all transactions in a specific category all time." << endl;
+				cout << "Enter 3 to see all monthly totals in a specific category." << endl;
+				cout << "Enter 4 to see all your month end cash flow values." << endl;
+				cout << "Enter 5 to go back." << endl;        //goes back to main menu.
+				cout << "Enter 6 to quit the program" << endl; //terminates program.
+				cin >> answer;
+				while (cin.fail() || answer < 1 || answer > 6) {  //input can't be non integer characters or integers not 1-6.
+					cout << "Sorry, that is not valid input. Please try again. " << endl;
+					cin.clear();   //clears error if users enters a string.
+					cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+					cin >> answer;   //takes new input.
+				}
+				switch (answer) {
+				case 1: {
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					int month = 0;
+					int year = 0;
+					cout << "Enter the month as a number from 1-12 where 1 is January and 12 is December. " << endl;        //get month.
+					cin >> month;
+					while (cin.fail() || month < 1 || month > 12) {  //input can't be non integer characters or integers not 1-12.
+						cout << "Sorry, that is not valid input. Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> month;   //takes new input.
+					}
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					cout << "Enter the year as a number from 1-99.  For example, 2001 should be entered as 1 and 2099 should be entered as 99. " << endl;  //get year.
+					cin >> year;
+					while (cin.fail() || year < 1 || year > 99) {  //input can't be non integer characters or integers not 00-99.
+						cout << "Sorry, that is not valid input. Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> year;   //takes new input.
+					}
+					master.getAllTransMo(month, year);
+					break;
+				} //end case 1
+				case 2: {
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					int category = 0;
+					cout << "Here's a list of categories in the file. Enter the corresponding number of the category you want to view. " << endl;
+					cout << endl;
+					cout << left << setw(17) << "Menu Option" << setw(25) << "Category" << endl;
+					for (int i = 0; i < master.uniqueCategories.size(); i++) {
+						cout << left << setw(17) << i + 1 << master.uniqueCategories[i] << endl;       //print out unique categories for user.
+					}
+					cin >> category;
+					while (cin.fail() || category < 1 || category > master.uniqueCategories.size()) {
+						cout << "Sorry, that is not valid input.  Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> category;   //takes new input.
+					}
+					master.getCatAllTime(master.uniqueCategories[category - 1]);
+					break;
+				} //end case 2
+				case 3: {
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					int category = 0;
+					cout << "Here's a list of categories in the file. Enter the corresponding number of the category you want to view. " << endl;
+					cout << endl;
+					cout << left << setw(17) << "Menu Option" << setw(25) << "Category" << endl;
+					for (int i = 0; i < master.uniqueCategories.size(); i++) {
+						cout << left << setw(17) << i + 1 << master.uniqueCategories[i] << endl;       //print out unique categories for user.
+					}
+					cin >> category;
+					while (cin.fail() || category < 1 || category > master.uniqueCategories.size()) {
+						cout << "Sorry, that is not valid input.  Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> category;   //takes new input.
+					}
+					master.getMonthlyByCat(master.uniqueCategories[category - 1]);
+					break;
+				}  //end case 3
+				case 4: {
+					master.getMonthEndCashFlows();
+					break;
+				} //end case 4
+				case 6:
+					exit(0);     //terminates program.
+				} //end switch
+			} while (answer != 5);
+			break;     //breaks out so program stays in main menu loop.
+		} //end case 1
+		case 2: {
+			int answer = 0;
+			do {   //stay in this menu on a loop until user presses 5 to go back or 6 to quit.
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+				cout << "Here you can set monthly budgeted amounts for your categories, compare your current actual spending compared to your budgeted amounts, and calculate how much per month you can save based on your budgeted amounts." << endl;
+				cout << "Enter 1 to view budgeted amounts." << endl;
+				cout << "Enter 2 to set budget amounts." << endl;
+				cout << "Enter 3 to compare actual to budget." << endl;
+				cout << "Enter 4 to see how much your budget plan should save you each month and your actual month end projected savings." << endl;
+				cout << "Enter 5 to go back." << endl;        //goes back to main menu.
+				cout << "Enter 6 to quit the program" << endl; //terminates program.
+				cin >> answer;
+				while (cin.fail() || answer < 1 || answer > 6) {  //input can't be non integer characters or integers not 1-6.
+					cout << "Sorry, that is not valid input. Please try again. " << endl;
+					cin.clear();   //clears error if users enters a string.
+					cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+					cin >> answer;   //takes new input.
+				}
+				switch (answer) {
+				case 1: {
+					cout << "Here's a list of your categories and budgeted amounts." << endl;
+					cout << endl;
+					cout << left << setw(25) << "Category" << setw(15) << "Type" << "Budget Amount" << endl;
+					for (int i = 0; i < budget.vec.size(); i++) {
+						cout << left << setw(25) << budget.vec[i].category << setw(15) << budget.vec[i].type << "$" << budget.vec[i].amount << endl;       //print out unique categories for user.
+					}
+					cout << endl;
+					break;
+				} //end case 1
+				case 2: {
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					int category = 0;
+					cout << "Here's a list of your categories and budgeted amounts. Enter the corresponding number of the category you want to set a budget amount for under Menu Options." << endl;
+					cout << endl;
+					cout << left << setw(17) << "Menu Options" << setw(25) << "Category" << setw(15) << "Type" << "Budget Amount" << endl;
+					for (int i = 0; i < budget.vec.size(); i++) {
+						cout << left << setw(17) << i + 1 << setw(25) << budget.vec[i].category << setw(15) << budget.vec[i].type << "$" << budget.vec[i].amount << endl;       //print out unique categories for user.
+					}
+					cin >> category;
+					while (cin.fail() || category < 1 || category > budget.vec.size()) {
+						cout << "Sorry, that is not valid input.  Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> category;   //takes new input.
+					}
+					budget.setAmount(budget.vec[category - 1].category);
+					break;
+				}//end case 2
+				case 3: {
+					cout << "Here's a list of your current monthly totals per category compared to your budgeted amounts." << endl;
+					cout << endl;
+					budget.paidVersusBudget(master);         //compare actual to budgeted for each category.
+					break;
+				}//end case 3
+				case 4: {
+					budget.calcMonthlySavings();            //month end savings projections.
+					break;
+				}//end case 4
+				case 6:
+					exit(0);     //terminates program.
+				} //end switch
+			} while (answer != 5);
+			break;
+		} //end case 2
+		case 3: {
+			int answer = 0;
+			do {   //stay in this menu on a loop until user presses 6 to go back or 7 to quit.
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+				cout << "Here you can view and edit items that you want to save up for and see how long it will take to acquire them or pay them off." << endl;
+				cout << "Enter 1 to view items." << endl;
+				cout << "Enter 2 to edit items." << endl;
+				cout << "Enter 3 to add items." << endl;
+				cout << "Enter 4 to remove items." << endl;
+				cout << "Enter 5 to show timelines for acquiring items." << endl;
+				cout << "Enter 6 to go back." << endl;  //goes back to last menu.
+				cout << "Enter 7 to quit the program" << endl; //terminates program.
+				cin >> answer;
+				while (cin.fail() || answer < 1 || answer > 7) {  //input can't be non integer characters or integers not 1-7.
+					cout << "Sorry, that is not valid input. Please try again. " << endl;
+					cin.clear();   //clears error if users enters a string.
+					cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+					cin >> answer;   //takes new input.
+				}
+				switch (answer) {
+				case 1: {
+					cout << "case 1 test" << endl;
+					break;
+				} //end case 1
+				case 2: {
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					int item = 0;
+					if (saving.objects.size() < 1) {
+						cout << "You have not entered any items to save for yet.";
+						break;
+					}
+					cout << "Here's a list of items you are saving for listed by priority. Enter the corresponding number under Priority that you want to edit. " << endl;
+					cout << endl;
+					cout << left << setw(17) << "Priority" << setw(25) << "Item" << "Cost" << endl;
+					for (int i = 0; i < saving.objects.size(); i++) {
+						cout << left << setw(17) << i + 1 << setw(25) << saving.objects[i].item << saving.objects[i].cost << endl;       //print out items for user.
+					}
+					cin >> item;
+					while (cin.fail() || item < 1 || item > saving.objects.size()) {
+						cout << "Sorry, that is not valid input.  Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> item;   //takes new input.
+					}
+					saving.editItems(saving.objects[item - 1].item);
+					break;
+				}//end case 2
+				case 3: {
+					saving.addItems();
+					break;
+				} //end case 3
+				case 4: {
+					cout << "case 4 test" << endl;
+					break;
+				} //end case 4
+				case 5: {
+					cout << "case 5 test" << endl;
+					break;
+				}//end case 5
+				case 7:
+					exit(0);     //terminates program.
+				} //end switch
+			} while (answer != 6);
+			break;
+		} //end case 3
+		case 4:
+			exit(0);        //terminates the program.
+		} //end case 4
+	} //end while
+} //end main
+
