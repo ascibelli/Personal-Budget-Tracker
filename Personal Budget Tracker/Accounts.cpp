@@ -275,11 +275,11 @@ void Accounts::getAllTransMo(int mo, int yr) {  //gets all transactions in a spe
 	}
 	cout << "Here are all the transactions for " << mo << "/" << yr << "." << endl;
 	cout << endl;
-	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(25) << "Category" << "Amount" << '\t' << '\t' << setw(8) << "Type" << "Account" << endl;
+	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(30) << "Category" << setw(20) << "Amount" << setw(8) << "Type" << "Account" << endl;
 	for (int i = 0; i < masterAccount.size(); i++) {    //print out if there's a match.
 		if (stoi(masterAccount[i].date.substr(0, 2)) == mo && stoi(masterAccount[i].date.substr(masterAccount[i].date.length() - 2)) == yr) {
-			cout << left << setw(13) << masterAccount[i].date << setw(40) << masterAccount[i].name << setw(25) << masterAccount[i].category <<
-				"$" << masterAccount[i].amount << '\t' << '\t' << setw(8) << masterAccount[i].type << masterAccount[i].accountType << endl;
+			cout << left << setw(13) << masterAccount[i].date << setw(40) << masterAccount[i].name << setw(30) << masterAccount[i].category <<
+				"$" << setw(19) << masterAccount[i].amount << setw(8) << masterAccount[i].type << masterAccount[i].accountType << endl;
 		}
 	}
 	cout << endl;
@@ -288,11 +288,11 @@ void Accounts::getAllTransMo(int mo, int yr) {  //gets all transactions in a spe
 void Accounts::getCatAllTime(string cat) {     // gets all transactions in a specific category all time.
 	cout << "These are your all time transactions for " << cat << "." << endl;
 	cout << endl;
-	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(25) << "Category" << "Amount" << '\t' << '\t' << setw(8) << "Type" << "Account" << endl;
+	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(30) << "Category" << setw(20) << "Amount" << setw(8) << "Type" << "Account" << endl;
 	for (int i = 0; i < masterAccount.size(); i++) {    //print out if there's a match.
 		if (masterAccount[i].category == cat) {
-			cout << left << setw(13) << masterAccount[i].date << setw(40) << masterAccount[i].name << setw(25) << masterAccount[i].category <<
-				"$" << masterAccount[i].amount << '\t' << '\t' << setw(8) << masterAccount[i].type << masterAccount[i].accountType << endl;
+			cout << left << setw(13) << masterAccount[i].date << setw(40) << masterAccount[i].name << setw(30) << masterAccount[i].category <<
+				"$" << setw(19) << masterAccount[i].amount << setw(8) << masterAccount[i].type << masterAccount[i].accountType << endl;
 		}
 	}
 	cout << endl;
@@ -329,7 +329,9 @@ void Accounts::getMonthEndCashFlows() {    //calculates month end cash flow valu
 	cout << left << setw(16) << "Month/Year" << "Cash Flow" << endl;
 
 	set<pair<int, int>>::iterator it;   //going to loop through the unique set of months and years.
-	for (it = monthYrs.begin(); it != monthYrs.end(); ++it) {          //loop through unique months and years.
+	set<pair<int, int>>::iterator itt = monthYrs.end();  //store in iterator for the current month and year.
+	--itt;               //decrement iterator because not at month end yet for current month and year.
+	for (it = monthYrs.begin(); it != itt; ++it) {          //loop through unique months and years for before the current month and year.
 		for (int j = 0; j < masterAccount.size(); j++) {   //loop through entire masterAccount file.
 			/*if matches unique month and year*/
 			if (stoi(masterAccount[j].date.substr(0, 2)) == it->second && stoi(masterAccount[j].date.substr(masterAccount[j].date.length() - 2)) == it->first) {

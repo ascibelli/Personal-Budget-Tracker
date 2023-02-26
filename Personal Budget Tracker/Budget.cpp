@@ -125,28 +125,15 @@ void Budget::paidVersusBudget(Accounts master) {      //will display actual expe
 
 
 void Budget::calcMonthlySavings() {   //calculates an expected month end savings amount based on the budget if it is followed and and adjusted month end savings based on actual expenditures.
-	for (int i = 0; i < vec.size(); i++) {
-		budgetedMonthlySavings += vec[i].amount;          //simply add all the budgeted amounts.
-	}
-	cout << "Your budgeted monthly savings per month is $" << budgetedMonthlySavings << "." << endl;
 
-	expectedMonthlySavings = budgetedMonthlySavings;
+	cout << "Your budgeted monthly savings per month is $" << calcBudgetedMoSavings() << "." << endl;
 
-	for (int i = 0; i < overBudget.size(); i++) {        //adjust the month end savings by transactions that have gone over budget.
-		if (overBudget[i].type == "I") {
-			expectedMonthlySavings += overBudget[i].amount;      //if it's income, add the amount over budget.
-		}
-		else {
-			expectedMonthlySavings -= overBudget[i].amount;    //else it's an expense, subtract amounts that have gone over budget.
-		}
-	}
-
-	cout << "Your actual expected monthly savings this month is $" << expectedMonthlySavings << "." << endl;
+	cout << "Your actual expected monthly savings this month is $" << calcExpectedMoSaving() << "." << endl;
 	cout << endl;
 }
 
 
-void Budget::calcEndMoCashFlow(float currentCashFlow, Accounts master) {    //calculates the expected month end cash flow based on actual expenditures and remaining budgeted amounts.
+float Budget::calcEndMoCashFlow(float currentCashFlow, Accounts master) {    //calculates the expected month end cash flow based on actual expenditures and remaining budgeted amounts.
 	float monthlyTotal = 0;                //get each categories monthly total for this month.
 	float adjustedAmounts = 0;             //keep track of differences between actual expenditures versus budgeted.
 	float projectedCashFlow = 0;           //final projected cash flow for the end of the month.
@@ -173,7 +160,7 @@ void Budget::calcEndMoCashFlow(float currentCashFlow, Accounts master) {    //ca
 		monthlyTotal = 0;
 	}
 	projectedCashFlow = currentCashFlow + adjustedAmounts;            //the final month end expected cash flow is the current cash flow plus the budget adjustments.
-	cout << "Your projected month end cash flow value based on your spending and remaining budget allocations is $" << fixed << setprecision(2) << projectedCashFlow << "." << endl;
+	return projectedCashFlow;
 }
 
 
@@ -208,4 +195,26 @@ void Budget::writeToFile(vector <T> vec, string filename) {       //template fun
 		cerr << "Could not open budget .csv file." << endl;
 		exit(1);
 	}
+}
+
+float Budget::calcBudgetedMoSavings(){                 //calculates monthly savings if budget is followed exactly.
+	float budgetedMonthlySavings = 0;
+	for (int i = 0; i < vec.size(); i++) {
+		budgetedMonthlySavings += vec[i].amount;          //simply add all the budgeted amounts.
+	}
+	return budgetedMonthlySavings;
+}
+
+
+float Budget::calcExpectedMoSaving() {                //calculates expected monthly savings based on adjustments for overbudget transactions.
+	float expectedMonthlySavings = calcBudgetedMoSavings();    //start with budgeted savings
+	for (int i = 0; i < overBudget.size(); i++) {        //adjust the month end savings by transactions that have gone over budget.
+		if (overBudget[i].type == "I") {
+			expectedMonthlySavings += overBudget[i].amount;      //if it's income, add the amount over budget.
+		}
+		else {
+			expectedMonthlySavings -= overBudget[i].amount;    //else it's an expense, subtract amounts that have gone over budget.
+		}
+	}
+	return expectedMonthlySavings;
 }

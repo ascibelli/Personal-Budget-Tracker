@@ -1,4 +1,5 @@
 #pragma once
+#include "Budget.h"
 #include <string>
 #include <vector>
 using namespace std;
@@ -16,15 +17,14 @@ private:
 		savingItems(string itm, float cst, int pr);  //constructor for savingItems struct.
 	};
 	string savingFileName;    //.csv filename for storing the items to be saved for.
-	string currentDate;     //holds the current date.
 public:
 	vector<savingItems> objects;
-	SavingFor(string filename, string date);       //constructor sets savingFileName and currentDate;
+	SavingFor(string filename);       //constructor sets savingFileName and currentDate;
 	void getItems();                          //display a report of items saving for.
 	void editItems(string item);                   //edit existing items.
 	void addItems();                    //function to add an object to be saved for.
-	void deleteItems();                //function to delete an object to be saved for.
-	void projectedAcquisition();               //reports on how when item can be acquired or how much monthly can be paid towards the item based on budget settings.
+	void deleteItems(string item);                //function to delete an object to be saved for.
+	void projectedAcquisition(Budget budg, float cashFlow, struct tm time);               //reports on how when item can be acquired or how much monthly can be paid towards the item based on budget settings.
 	template <typename T>          //template function to write any type of vector to columns and rows in a .csv file.          
 	void writeToFile(vector <T> vec, string filename);
 };

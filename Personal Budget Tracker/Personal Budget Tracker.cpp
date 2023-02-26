@@ -4,7 +4,7 @@
 #include "Budget.h"
 #include "SavingFor.h"
 #include <iostream>
-#include <iomanip> //for setprecision in calcCurrCashFlow()
+#include <iomanip> 
 using namespace std;
 
 int main()
@@ -20,11 +20,12 @@ int main()
 	/* Pass in beginning cash flow value and .csv file name.*/
 	Accounts master((float)500, "MasterAccounts.csv");
 	Budget budget("Budget.csv", buffer, master);
-	SavingFor saving("Saving.csv", buffer);
+	SavingFor saving("Saving.csv");
 
 	cout << "Hello, today is " << buffer << ". " << endl;
 	cout << "Your current cash flow is $" << fixed << setprecision(2) << master.calcCurrCashFlow() << "." << endl;  //only print out two decimal places because it's currency.
-	budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master);     //print out expected month end cash flow.
+	cout << "Your projected month end cash flow value based on your spending and remaining budget allocations is $"
+		<< fixed << setprecision(2) << budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master) << "." << endl;    //print out expected month end cash flow.
 	budget.budgetAlerts();                   //print out alerts for over budget categories.
 	cout << endl;
 
@@ -206,9 +207,9 @@ int main()
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
 				cout << "Here you can view and edit items that you want to save up for and see how long it will take to acquire them or pay them off." << endl;
 				cout << "Enter 1 to view items." << endl;
-				cout << "Enter 2 to edit items." << endl;
-				cout << "Enter 3 to add items." << endl;
-				cout << "Enter 4 to remove items." << endl;
+				cout << "Enter 2 to edit an item." << endl;
+				cout << "Enter 3 to add an item." << endl;
+				cout << "Enter 4 to remove an item." << endl;
 				cout << "Enter 5 to show timelines for acquiring items." << endl;
 				cout << "Enter 6 to go back." << endl;  //goes back to last menu.
 				cout << "Enter 7 to quit the program" << endl; //terminates program.
@@ -221,21 +222,27 @@ int main()
 				}
 				switch (answer) {
 				case 1: {
-					cout << "case 1 test" << endl;
+					if (saving.objects.size() < 1) {      //if no items entered.
+						cout << "You have not entered any items to save for yet." << endl;
+						cout << endl;
+						break;
+					}
+					saving.getItems();   //print list of items.
 					break;
 				} //end case 1
 				case 2: {
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
-					int item = 0;
 					if (saving.objects.size() < 1) {
-						cout << "You have not entered any items to save for yet.";
+						cout << "You have not entered any items to save for yet." << endl;
+						cout << endl;
 						break;
 					}
+					int item = 0;
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
 					cout << "Here's a list of items you are saving for listed by priority. Enter the corresponding number under Priority that you want to edit. " << endl;
 					cout << endl;
 					cout << left << setw(17) << "Priority" << setw(25) << "Item" << "Cost" << endl;
 					for (int i = 0; i < saving.objects.size(); i++) {
-						cout << left << setw(17) << i + 1 << setw(25) << saving.objects[i].item << saving.objects[i].cost << endl;       //print out items for user.
+						cout << left << setw(17) << i + 1 << setw(25) << saving.objects[i].item << "$" << saving.objects[i].cost << endl;       //print out items for user.
 					}
 					cin >> item;
 					while (cin.fail() || item < 1 || item > saving.objects.size()) {
@@ -252,11 +259,31 @@ int main()
 					break;
 				} //end case 3
 				case 4: {
-					cout << "case 4 test" << endl;
+					if (saving.objects.size() < 1) {
+						cout << "You have not entered any items to save for yet." << endl;
+						cout << endl;
+						break;
+					}
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					int item = 0;
+					cout << "Here's a list of items you are saving for listed by priority. Enter the corresponding number under Priority that you want to delete. " << endl;
+					cout << endl;
+					cout << left << setw(17) << "Priority" << setw(25) << "Item" << "Cost" << endl;
+					for (int i = 0; i < saving.objects.size(); i++) {
+						cout << left << setw(17) << i + 1 << setw(25) << saving.objects[i].item << "$" << saving.objects[i].cost << endl;       //print out items for user.
+					}
+					cin >> item;
+					while (cin.fail() || item < 1 || item > saving.objects.size()) {
+						cout << "Sorry, that is not valid input.  Please try again. " << endl;
+						cin.clear();   //clears error if users enters a string.
+						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+						cin >> item;   //takes new input.
+					}
+					saving.deleteItems(saving.objects[item - 1].item);
 					break;
 				} //end case 4
 				case 5: {
-					cout << "case 5 test" << endl;
+					saving.projectedAcquisition(budget, budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master), timeinfo);
 					break;
 				}//end case 5
 				case 7:
