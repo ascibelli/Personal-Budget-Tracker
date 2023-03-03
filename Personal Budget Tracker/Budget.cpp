@@ -165,18 +165,18 @@ float Budget::calcEndMoCashFlow(float currentCashFlow, Accounts master) {    //c
 
 
 void Budget::budgetAlerts() {        //alerts the user when they are over budget on categories.
-	cout << "Congratulations,";                     //print out the categories and amounts more income than expected was earned.
+	if (overBudget.size() == 0) {        //if nothing overbudget don't do anything.
+		return;
+	}
 	for (int i = 0; i < overBudget.size(); i++) {
-		if (overBudget[i].type == "I") {
-			cout << " You have earned $" << overBudget[i].amount << " more than expected for " << overBudget[i].category << ". ";
+		if (overBudget[i].type == "I") {             //if over budget on income, that's good.
+			cout << "Congratulations, you have earned $" << overBudget[i].amount << " more than expected for " << overBudget[i].category << ". " << endl;
 		}
 	}
-	cout << endl;
-	cout << "WARNING:";
-	for (int i = 0; i < overBudget.size(); i++) {  //warn for categories and amounts more was spent than budgeted for.
-		if (overBudget[i].type == "E") {
-			cout << " You have spent $" << overBudget[i].amount << " more than expected for " << overBudget[i].category << ".";
-		}
+	for (int i = 0; i < overBudget.size(); i++) {
+			if (overBudget[i].type == "E") {      //else if category is an expense, not good, overspent.
+				cout << "WARNING: you have spent $" << overBudget[i].amount << " more than expected for " << overBudget[i].category << "." << endl;
+			}
 	}
 	cout << endl;
 }

@@ -2,10 +2,8 @@
 
 #include "Accounts.h"
 #include <iostream>
-#include <fstream>   //file input/output
-#include <string>   
+#include <fstream>   //file input/output 
 #include <sstream>   //stringstream
-#include <vector> 
 #include <algorithm>  //for getting unique categories.
 #include <iomanip> //for setprecision in calcCurrCashFlow()
 using namespace std;
@@ -42,31 +40,31 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 			string tempString;  //use for converting the amount from string to double
 
 			stringstream inputString(line);   //stores the first line in stringstream object.
-			getline(inputString, date, ',');  //puts the first word into the date variable.
-			int countBackSlash = 0;        //make sure a date only has two backslashes.
+			getline(inputString, date, ',');  //gets the string up to the comma and puts into the date variable.
+			int countForwardSlash = 0;        //make sure a date only has two backslashes.
 			if (date.length() < 8 || date.length() > 10) { //All dates should be 8 to 10 characters.
 				cerr << "There is a date with an invalid number of characters or no characters in the date column in the .csv file." << endl;  //it's an error.
 				exit(1);
 			}
-			if (date.length() == 8) {   //date of length 8
+			else if (date.length() == 8) {   //date of length 8
 				for (int i = 0; i < date.length(); i++) {
 					if (isdigit((int)date[i]) == false && date[i] != '/') {   //check everything is either a digit or a '/'
-						cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
+						cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
 						exit(1);
 					}
-					if (date[i] == '/') {
-						countBackSlash++;
+					else if (date[i] == '/') {
+						countForwardSlash++;
 					}
-					if (countBackSlash > 2) {  //Can only be two backslashes
-						cerr << "Check the date column in the .csv file for more than two backslashes in a date." << endl;  //it's an error.
+					else if (countForwardSlash > 2) {  //Can only be two forward slashes
+						cerr << "Check the date column in the .csv file for an extra forward slash." << endl;  //it's an error.
 						exit(1);
 					}
-					if ((i == 1 && date[i] != '/') || (i == 3 && date[i] != '/')) {  //for a date of length 8 the '/' need to be in the 2nd and 4th position.
-						cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
+					else if ((i == 1 && date[i] != '/') || (i == 3 && date[i] != '/')) {  //for a date of length 8 the '/' need to be in the 2nd and 4th position.
+						cerr << "Check the date column in the .csv file for an invalid date." << endl;  //it's an error.
 						exit(1);
 					}
-					if (i == 0 && date[i] == '0') {    //make sure the first digit isn't 0.
-						cerr << "Check the date column for a preceding 0 in the .csv file." << endl;  //it's an error.
+					else if (i == 0 && date[i] == '0') {    //make sure the first digit isn't 0.
+						cerr << "Check the date column in the .csv file for a preceding 0." << endl;  //it's an error.
 						exit(1);
 					}
 				}
@@ -74,26 +72,30 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 			else if (date.length() == 10) {  //date of length 10.
 				for (int i = 0; i < date.length(); i++) {
 					if (isdigit((int)date[i]) == false && date[i] != '/') {
-						cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
+						cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
 						exit(1);
 					}
-					if (date[i] == '/') {
-						countBackSlash++;
+					else if (date[i] == '/') {
+						countForwardSlash++;
 					}
-					if (countBackSlash > 2) {
-						cerr << "Check the date column in the .csv file for more than two backslashes in a date." << endl;  //it's an error.
+					else if (countForwardSlash > 2) {
+						cerr << "Check the date column in the.csv file for an extra forward slash." << endl;  //it's an error.
 						exit(1);
 					}
-					if ((i == 2 && date[i] != '/') || (i == 5 && date[i] != '/')) {   //backslashes need to be in the 3rd and 6th position.
-						cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
+					else if ((i == 2 && date[i] != '/') || (i == 5 && date[i] != '/')) {   //forward slashes need to be in the 3rd and 6th position.
+						cerr << "Check the date column in the .csv file for an invalid date." << endl;  //it's an error.
 						exit(1);
 					}
-					if (i == 0 && date[i] == '0') {           //check that the first digit isn't 0.
-						cerr << "Check the date column for a preceding 0 in the .csv file." << endl;  //it's an error.
+					else if (i == 0 && date[i] == '0') {           //check that the first digit isn't 0.
+						cerr << "Check the date column in the .csv file for a preceding 0." << endl;  //it's an error.
 						exit(1);
 					}
-					if (date.substr(0, 2) != "10" && date.substr(0, 2) != "11" && date.substr(0, 2) != "12") {   //month has to be 10-12.
+					else if (stoi(date.substr(0, 2)) > 12) {   //month has to be 10-12.
 						cerr << "Check the date column in the .csv file for a month greater than 12." << endl;  //it's an error.
+						exit(1);
+					}
+					else if (stoi(date.substr(3, 2)) > 31) {     //days can't be greater than 31.
+						cerr << "Check the date column in the .csv file for a day greater than 31." << endl;  //it's an error.
 						exit(1);
 					}
 				}
@@ -101,34 +103,27 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 			else if (date.length() == 9) {
 				for (int i = 0; i < date.length(); i++) {
 					if (isdigit((int)date[i]) == false && date[i] != '/') {
-						cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
+						cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
 						exit(1);
 					}
-					if (date[i] == '/') {
-						countBackSlash++;
+					else if (date[i] == '/') {
+						countForwardSlash++;
 					}
-					if (countBackSlash > 2) {
-						cerr << "Check the date column in the .csv file for more than two backslashes in a date." << endl;  //it's an error.
+					else if (countForwardSlash > 2) {
+						cerr << "Check the date column in the .csv file for an extra forward slash." << endl;  //it's an error.
 						exit(1);
 					}
-					if (i == 1 && date[i] != '/') {     //if the backslash is not in the second position (months 10-12).
-						if ((date[i + 1] != '/') || (date[i + 3] != '/')) {  //the backslashes must be in the 3rd and 5th positions.
-							cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
-							exit(1);
-						}
-						if (date.substr(0, 2) != "10" && date.substr(0, 2) != "11" && date.substr(0, 2) != "12") {  //months must be 10-12.
-							cerr << "Check the date column in the .csv file for a month greater than 12." << endl;  //it's an error.
-							exit(1);
-						}
-					}
-					if (i == 1 && date[i] == '/') {    //if the backslash is in the second position
-						if (date[i + 3] != '/') {     //the other must be in the fifth.
-							cerr << "Check the date column for an invalid date format in the .csv file." << endl;  //it's an error.
-							exit(1);
-						}
-					}
-					if (i == 0 && date[i] == '0') {   //first digit can't be 0.
-						cerr << "Check the date column for a preceding 0 in the .csv file." << endl;  //it's an error.
+					//else if () {
+						//cerr << "Check the date column in the .csv file for an scrum date." << endl;  //it's an error.
+						//exit(1);
+					//}
+					//else if (stoi(date.substr(2, 2)) > 31) {   //days can't be greater than 31.
+					        // cerr << "Check the date column in the .csv file for a day greater than 31." << endl;  //it's an error.
+							//exit(1);
+						//}
+					//}
+					else if (i == 0 && date[i] == '0') {   //first digit can't be 0.
+						cerr << "Check the date column in the .csv file for a preceding 0." << endl;  //it's an error.
 						exit(1);
 					}
 				}
@@ -136,7 +131,7 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 
 			getline(inputString, name, ',');
 			if (name == "") {     //check for empty cell.
-				cerr << "Check name column in .csv file for empty cell." << endl;  //it's an error.
+				cerr << "Check name column in .csv file for empty cells." << endl;  //it's an error.
 				exit(1);
 			}
 			else if (name.length() > 35) {         //can't have a name longer than 35 characters for printing output neatly.
@@ -146,7 +141,7 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 
 			getline(inputString, category, ',');
 			if (category == "") {     //check for empty cell.
-				cerr << "Check category column in .csv file for empty cell." << endl;  //it's an error.
+				cerr << "Check category column in .csv file for empty cells." << endl;  //it's an error.
 				exit(1);
 			}
 			else if (category.length() > 20) {    //can't have a category longer than 20 characters for printing output neatly.
@@ -167,54 +162,45 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 					cerr << "Check amount column in masterAccount .csv file for invalid entries." << endl;  //it's an error.
 					exit(1);
 				}
-				if (tempString[i] == '.') {  //should only have 1 '.' in amount data.
+				else if (tempString[i] == '.') {  //should only have 1 '.' in amount data.
 					countperiod++;
 				}
-				if (tempString[i] == '-' && i > 0) {  //can have a hyphen becuase of negative numbers, but it should always be the first character.
+				else if (tempString[i] == '-' && i > 0) {  //can have a hyphen becuase of negative numbers, but it should always be the first character.
 					counthyphen++;
 				}
-				if (countperiod > 1 || counthyphen > 1) {  //if either of these is greater than 1 there is an error.
+				else if (countperiod > 1 || counthyphen > 1) {  //if either of these is greater than 1 there is an error.
 					cerr << "Check amount column in masterAccount .csv file for invalid entries." << endl;
 					exit(1);
 				}
-				if (i == 0 && tempString[i] == '0') {   //all transactions should have some value and not be 0.
+				else if (i == 0 && tempString[i] == '0') {   //all transactions should have some value and not be 0.
 					cerr << "Can't have an amount of 0." << endl;
 					exit(1);
 				}
 			}
 			if (tempString == "") {     //check for empty cell.
-				cerr << "Check amount column in .csv file for empty cell." << endl;  //it's an error.
+				cerr << "Check amount column in .csv file for empty cells." << endl;  //it's an error.
 				exit(1);
 			}
 			amount = atof(tempString.c_str());      //uses atof to take string tempString and return a double into amount.
 
 			getline(inputString, type, ',');
-			for (int i = 0; i < type.length(); i++) {
-				if (type[i] != 'I' && type[i] != 'E') {  //'I' and 'E' are the only valid entries for this column
-					cerr << "Check type column in .csv file for invalid entries." << endl;  //it's an error.
+			if (type != "I" && type != "E") {  //'I' and 'E' are the only valid entries for this column
+					cerr << "Check type column in .csv file for invalid entries or blank cells." << endl;  //it's an error.
 					exit(1);
 				}
-			}
-			if (type == "I" && amount < 0) {  //income should positive.
+			else if (type == "I" && amount < 0) {  //income should positive.
 				cerr << "There is a negative value labelled as income." << endl;  //it's an error.
 				exit(1);
 			}
-			if (type == "E" && amount > 0) {  //expenses should be negative.
+			else if (type == "E" && amount > 0) {  //expenses should be negative.
 				cerr << "There is a positive value labelled as an expense." << endl;  //it's an error.
 				exit(1);
 			}
-			if (type == "") {     //check for empty cell.
-				cerr << "Check type column in .csv file for empty cell." << endl;  //it's an error.
-				exit(1);
-			}
-
 			getline(inputString, accountType, ',');
 			if (accountType != "Checking" && accountType != "Credit") {  //these are the only two valid options
 				cerr << "Check account type column in .csv file for invalid entries or blank cells." << endl;  //it's an error.
 				exit(1);
-
 			}
-
 			transaction row(date, name, category, (float)amount, type, accountType);  //pass temp variables into transaction struct.
 
 			masterAccount.push_back(row);  //pushes back the struct row into the masterAccount vector.
@@ -245,7 +231,7 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 	pair<int, int> pairs;
 	for (int i = 0; i < masterAccount.size(); i++) {  //make pairs of all month and year combos.
 		pairs = make_pair(stoi(masterAccount[i].date.substr(masterAccount[i].date.length() - 2)), stoi(masterAccount[i].date.substr(0, 2))); //year is the key and month is the value.
-		monthYrs.insert(pairs);      //inserts pairs into a set so it will store only unique combos of month and year.
+		monthYrs.insert(pairs);      //inserts pairs into a set, it will store only unique combos of year and month.
 	}
 
 }
@@ -262,13 +248,14 @@ float Accounts::calcCurrCashFlow() {   //calculates the current cash flow value.
 
 
 void Accounts::getAllTransMo(int mo, int yr) {  //gets all transactions in a specific month and year.
-	int data = 0;              //see if that month and year are in the file
-	for (int i = 0; i < masterAccount.size(); i++) {
-		if (stoi(masterAccount[i].date.substr(0, 2)) == mo && stoi(masterAccount[i].date.substr(masterAccount[i].date.length() - 2)) == yr) { //if month and year match.
-			data++;   //there is data there.
+	int data = 0;              //to see if that month and year are in the file
+	for (int i = 0; i < masterAccount.size(); i++) {  //loop through the master file.
+		if (stoi(masterAccount[i].date.substr(0, 2)) == mo && stoi(masterAccount[i].date.substr(masterAccount[i].date.length() - 2)) == yr) {
+			data++;   //if the month and year match there is data there.
+			break;
 		}
 	}
-	if (data == 0) {  //no data.
+	if (data == 0) {  //no data.  return function.
 		cout << "There is no data in the file for that month and year." << endl;
 		cout << endl;
 		return;
@@ -276,7 +263,7 @@ void Accounts::getAllTransMo(int mo, int yr) {  //gets all transactions in a spe
 	cout << "Here are all the transactions for " << mo << "/" << yr << "." << endl;
 	cout << endl;
 	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(30) << "Category" << setw(20) << "Amount" << setw(8) << "Type" << "Account" << endl;
-	for (int i = 0; i < masterAccount.size(); i++) {    //print out if there's a match.
+	for (int i = 0; i < masterAccount.size(); i++) {    //loop through the whole master file. print out every transaction if month and year match.
 		if (stoi(masterAccount[i].date.substr(0, 2)) == mo && stoi(masterAccount[i].date.substr(masterAccount[i].date.length() - 2)) == yr) {
 			cout << left << setw(13) << masterAccount[i].date << setw(40) << masterAccount[i].name << setw(30) << masterAccount[i].category <<
 				"$" << setw(19) << masterAccount[i].amount << setw(8) << masterAccount[i].type << masterAccount[i].accountType << endl;
@@ -289,8 +276,8 @@ void Accounts::getCatAllTime(string cat) {     // gets all transactions in a spe
 	cout << "These are your all time transactions for " << cat << "." << endl;
 	cout << endl;
 	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(30) << "Category" << setw(20) << "Amount" << setw(8) << "Type" << "Account" << endl;
-	for (int i = 0; i < masterAccount.size(); i++) {    //print out if there's a match.
-		if (masterAccount[i].category == cat) {
+	for (int i = 0; i < masterAccount.size(); i++) {    
+		if (masterAccount[i].category == cat) {     //print out if there's a match.
 			cout << left << setw(13) << masterAccount[i].date << setw(40) << masterAccount[i].name << setw(30) << masterAccount[i].category <<
 				"$" << setw(19) << masterAccount[i].amount << setw(8) << masterAccount[i].type << masterAccount[i].accountType << endl;
 		}
@@ -305,12 +292,12 @@ void Accounts::getMonthlyByCat(string cat) {   //gets monthly totals in a specif
 	cout << endl;
 	cout << left << setw(16) << "Month/Year" << "Total" << endl;
 
-	set<pair<int, int>>::iterator it;
+	set<pair<int, int>>::iterator it;       //iterate through the set of month/years.
 	for (it = monthYrs.begin(); it != monthYrs.end(); ++it) {  //for each unique month year combo
 		for (int j = 0; j < masterAccount.size(); j++) {   //loop through entire masterAccount file for matches.
 			/*if matches category and unique month and year*/
 			if (masterAccount[j].category == cat && stoi(masterAccount[j].date.substr(0, 2)) == it->second && stoi(masterAccount[j].date.substr(masterAccount[j].date.length() - 2)) == it->first) {
-				monthlyTotal += masterAccount[j].amount;   //add the amounts. resets to 0 for each new month/year combo.
+				monthlyTotal += masterAccount[j].amount;   //add the amounts. resets to 0 for each new month/year combo outside of loop below.
 				allTimeTotal += masterAccount[j].amount;   //keep adding all the amounts for an overall average.
 			}
 		}
@@ -323,15 +310,15 @@ void Accounts::getMonthlyByCat(string cat) {   //gets monthly totals in a specif
 
 void Accounts::getMonthEndCashFlows() {    //calculates month end cash flow values all time.
 	float monthEnd = BEG_CASH_FLOW;      //start at beginning cash flow.
-	float monthEndTotals = 0;            //Add all monthe end values for an overall average.   
+	float monthEndTotals = 0;            //Add all month end values for an overall average.   
 	cout << "These are your month end cash flow values." << endl;
 	cout << endl;
 	cout << left << setw(16) << "Month/Year" << "Cash Flow" << endl;
 
 	set<pair<int, int>>::iterator it;   //going to loop through the unique set of months and years.
 	set<pair<int, int>>::iterator itt = monthYrs.end();  //store in iterator for the current month and year.
-	--itt;               //decrement iterator because not at month end yet for current month and year.
-	for (it = monthYrs.begin(); it != itt; ++it) {          //loop through unique months and years for before the current month and year.
+	--itt;                              //decrement iterator because still not at month end yet for current month and year and don't want to print that.
+	for (it = monthYrs.begin(); it != itt; ++it) {          //loop through unique months and years until the current month and year.
 		for (int j = 0; j < masterAccount.size(); j++) {   //loop through entire masterAccount file.
 			/*if matches unique month and year*/
 			if (stoi(masterAccount[j].date.substr(0, 2)) == it->second && stoi(masterAccount[j].date.substr(masterAccount[j].date.length() - 2)) == it->first) {
@@ -339,9 +326,9 @@ void Accounts::getMonthEndCashFlows() {    //calculates month end cash flow valu
 			}
 		}
 		cout << left << it->second << "/" << it->first << '\t' << '\t' << "$" << monthEnd << endl;   //output the monthly total.
-		monthEndTotals += monthEnd;   //add each monthly total for the average monthly total.
+		monthEndTotals += monthEnd;   //add each monthly total for a grand total for to calculate average monthly total.
 	}
-	cout << "Your average month end cash flow value is $" << monthEndTotals / monthYrs.size() << "." << endl;     //output monthly average.
+	cout << "Your average month end cash flow value is $" << monthEndTotals / (monthYrs.size()-1) << "." << endl;     //output monthly average.
 	cout << endl;
 }
 

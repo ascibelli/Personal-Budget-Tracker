@@ -1,4 +1,6 @@
-/*Adam Scibelli- */
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the main file that instantiates the */
 
 #include "Accounts.h"
 #include "Budget.h"
@@ -14,23 +16,22 @@ int main()
 	time(&rawtime);
 	localtime_s(&timeinfo, &rawtime);
 	char buffer[70];
-	strftime(buffer, 70, "%m/%d/%Y", &timeinfo);  //formats today's day into string buffer.
+	strftime(buffer, 70, "%m/%d/%Y", &timeinfo);  //formats today's date into string buffer.
 
-
-	/* Pass in beginning cash flow value and .csv file name.*/
-	Accounts master((float)500, "MasterAccounts.csv");
+	Accounts master((float)500, "MasterAccounts.csv"); //pass in beginning cash flow value(500) before pasting transactions into master .csv file.
 	Budget budget("Budget.csv", buffer, master);
 	SavingFor saving("Saving.csv");
 
 	cout << "Hello, today is " << buffer << ". " << endl;
-	cout << "Your current cash flow is $" << fixed << setprecision(2) << master.calcCurrCashFlow() << "." << endl;  //only print out two decimal places because it's currency.
+	/*only print out two decimal places because it's currency.*/
+	cout << "Your current cash flow is $" << fixed << setprecision(2) << master.calcCurrCashFlow() << "." << endl;
 	cout << "Your projected month end cash flow value based on your spending and remaining budget allocations is $"
-		<< fixed << setprecision(2) << budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master) << "." << endl;    //print out expected month end cash flow.
-	budget.budgetAlerts();                   //print out alerts for over budget categories.
+		<< fixed << setprecision(2) << budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master) << "." << endl;//print out expected month end cash flow.
+	budget.budgetAlerts();                   //print out alerts for over budget categories if there are any.
 	cout << endl;
 
 
-	while (1) {
+	while (1) {  //menu runs in an infinite loop.
 		int option = 0;     //user enter a number from the menu based on what they want to do.
 		cout << "Welcome to the main menu." << endl;
 		cout << "What would you like to do?" << endl;
@@ -49,7 +50,7 @@ int main()
 		case 1: {
 			int answer = 0;
 			do {   //stay in this menu on a loop until user presses 5 to go back or 6 to quit.
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float (1.2) was entered in error.
 				cout << "How would you like to view your history?" << endl;
 				cout << "Enter 1 to see all transactions in specific month." << endl;
 				cout << "Enter 2 to see all transactions in a specific category all time." << endl;
@@ -66,10 +67,10 @@ int main()
 				}
 				switch (answer) {
 				case 1: {
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float(1.2) was entered.
 					int month = 0;
 					int year = 0;
-					cout << "Enter the month as a number from 1-12 where 1 is January and 12 is December. " << endl;        //get month.
+					cout << "Enter the month as a number from 1-12 where 1 is January and 12 is December. " << endl;    //get month.
 					cin >> month;
 					while (cin.fail() || month < 1 || month > 12) {  //input can't be non integer characters or integers not 1-12.
 						cout << "Sorry, that is not valid input. Please try again. " << endl;
@@ -77,8 +78,8 @@ int main()
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> month;   //takes new input.
 					}
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
-					cout << "Enter the year as a number from 1-99.  For example, 2001 should be entered as 1 and 2099 should be entered as 99. " << endl;  //get year.
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float(1.2) was entered.
+					cout << "Enter the year as a number from 1-99.  For example, 2001 should be entered as 1 and 2099 should be entered as 99. " << endl; 
 					cin >> year;
 					while (cin.fail() || year < 1 || year > 99) {  //input can't be non integer characters or integers not 00-99.
 						cout << "Sorry, that is not valid input. Please try again. " << endl;
@@ -86,36 +87,38 @@ int main()
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> year;   //takes new input.
 					}
-					master.getAllTransMo(month, year);
+					cout << endl;
+					master.getAllTransMo(month, year);  //get all transactions in a month.
 					break;
 				} //end case 1
 				case 2: {
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float(2.5) was entered.
 					int category = 0;
 					cout << "Here's a list of categories in the file. Enter the corresponding number of the category you want to view. " << endl;
 					cout << endl;
 					cout << left << setw(17) << "Menu Option" << setw(25) << "Category" << endl;
 					for (int i = 0; i < master.uniqueCategories.size(); i++) {
-						cout << left << setw(17) << i + 1 << master.uniqueCategories[i] << endl;       //print out unique categories for user.
+						cout << left << setw(17) << i + 1 << master.uniqueCategories[i] << endl;  //print out unique categories for user with menu option.
 					}
 					cin >> category;
-					while (cin.fail() || category < 1 || category > master.uniqueCategories.size()) {
+					while (cin.fail() || category < 1 || category > master.uniqueCategories.size()) { //option has to be within size of uniqueCategories.
 						cout << "Sorry, that is not valid input.  Please try again. " << endl;
 						cin.clear();   //clears error if users enters a string.
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> category;   //takes new input.
 					}
-					master.getCatAllTime(master.uniqueCategories[category - 1]);
+					cout << endl;
+					master.getCatAllTime(master.uniqueCategories[category - 1]);  //pass in unique category as a string and get all transactions for it.
 					break;
 				} //end case 2
 				case 3: {
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float(3.6) was entered.
 					int category = 0;
 					cout << "Here's a list of categories in the file. Enter the corresponding number of the category you want to view. " << endl;
 					cout << endl;
 					cout << left << setw(17) << "Menu Option" << setw(25) << "Category" << endl;
 					for (int i = 0; i < master.uniqueCategories.size(); i++) {
-						cout << left << setw(17) << i + 1 << master.uniqueCategories[i] << endl;       //print out unique categories for user.
+						cout << left << setw(17) << i + 1 << master.uniqueCategories[i] << endl;   //print out unique categories for user with menu options.
 					}
 					cin >> category;
 					while (cin.fail() || category < 1 || category > master.uniqueCategories.size()) {
@@ -124,11 +127,13 @@ int main()
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> category;   //takes new input.
 					}
-					master.getMonthlyByCat(master.uniqueCategories[category - 1]);
+					cout << endl;
+					master.getMonthlyByCat(master.uniqueCategories[category - 1]); //pass unique category as a string and get the monthly totals for it.
 					break;
 				}  //end case 3
 				case 4: {
-					master.getMonthEndCashFlows();
+					cout << endl;
+					master.getMonthEndCashFlows();  //get list of month end cash flows.
 					break;
 				} //end case 4
 				case 6:
