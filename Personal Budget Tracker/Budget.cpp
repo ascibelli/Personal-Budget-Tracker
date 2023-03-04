@@ -1,7 +1,6 @@
 #include "Budget.h"
 #include <iostream>
-#include <fstream>   //file input/output
-#include <string>   
+#include <fstream>   //file input/output 
 #include <sstream>   //stringstream
 #include <iomanip>
 using namespace std;
@@ -18,7 +17,7 @@ Budget::Budget(string fileName, string date, Accounts master) {   //stores the b
 	budgetFileName = fileName;
 	currentDate = date;
 
-	for (int i = 0; i < master.uniqueCategories.size(); i++) {
+	for (int i = 0; i < master.uniqueCategories.size(); i++) {    //get transaction type for each unique category from master .csv file
 		string transType = "";                      //temp variable to get transaction type(I/E)
 		for (int j = 0; j < master.masterAccount.size(); j++) {    //bring in its type from the masterAccount .csv file.
 			if (master.uniqueCategories[i] == master.masterAccount[j].category) {
@@ -70,7 +69,7 @@ Budget::Budget(string fileName, string date, Accounts master) {   //stores the b
 
 
 void Budget::setAmount(string cat) {      //set a budget amount for a category.
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float was entered.
 	float amount = 0;
 	cout << "Enter a new monthly budget amount for " << cat << ". " << endl;
 	cin >> amount;

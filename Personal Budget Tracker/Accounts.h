@@ -22,10 +22,11 @@ private:
 	string accountFileName;  //the .csv file name.
 	float currCashFlow;     //the result of beginning cash flow +/- all transactions in the .csv masterAccount file.
 	set<pair<int, int>> monthYrs;      //for storing month year combinations in the .csv file.
+	string currentDate;
 public:
 	vector<transaction> masterAccount;  //vector of type transaction to push transactions from .csv file into.
 	vector<string> uniqueCategories;    //stores unique values for the categories field in the .csv file.
-	Accounts(float beg, string fileName);  //constructor for Accounts class.  Takes beginning cash flow and .csv file name.
+	Accounts(float beg, string fileName, string date);  //constructor for Accounts class.  Takes beginning cash flow and .csv file name.
 	float calcCurrCashFlow();   //calculates the current cash flow value.
 	void getAllTransMo(int mo, int yr);    //gets all transactions in a specific month and year.
 	void getCatAllTime(string cat); //gets all transactions in a specific category all time.

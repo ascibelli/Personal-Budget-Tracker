@@ -17,8 +17,10 @@ int main()
 	localtime_s(&timeinfo, &rawtime);
 	char buffer[70];
 	strftime(buffer, 70, "%m/%d/%Y", &timeinfo);  //formats today's date into string buffer.
+	string buf = buffer;
 
-	Accounts master((float)500, "MasterAccounts.csv"); //pass in beginning cash flow value(500) before pasting transactions into master .csv file.
+	/*instantiate three classes*/
+	Accounts master((float)500, "MasterAccounts.csv", buffer); //pass in beginning cash flow value(500) before pasting transactions into master .csv file.
 	Budget budget("Budget.csv", buffer, master);
 	SavingFor saving("Saving.csv");
 
@@ -145,7 +147,7 @@ int main()
 		case 2: {
 			int answer = 0;
 			do {   //stay in this menu on a loop until user presses 5 to go back or 6 to quit.
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float (4.5) was entered.
 				cout << "Here you can set monthly budgeted amounts for your categories, compare your current actual spending compared to your budgeted amounts, and calculate how much per month you can save based on your budgeted amounts." << endl;
 				cout << "Enter 1 to view budgeted amounts." << endl;
 				cout << "Enter 2 to set budget amounts." << endl;
@@ -166,28 +168,28 @@ int main()
 					cout << endl;
 					cout << left << setw(25) << "Category" << setw(15) << "Type" << "Budget Amount" << endl;
 					for (int i = 0; i < budget.vec.size(); i++) {
-						cout << left << setw(25) << budget.vec[i].category << setw(15) << budget.vec[i].type << "$" << budget.vec[i].amount << endl;       //print out unique categories for user.
+						cout << left << setw(25) << budget.vec[i].category << setw(15) << budget.vec[i].type << "$" << budget.vec[i].amount << endl; //print out unique categories for user.
 					}
 					cout << endl;
 					break;
 				} //end case 1
 				case 2: {
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float(2.2) was entered.
 					int category = 0;
 					cout << "Here's a list of your categories and budgeted amounts. Enter the corresponding number of the category you want to set a budget amount for under Menu Options." << endl;
 					cout << endl;
 					cout << left << setw(17) << "Menu Options" << setw(25) << "Category" << setw(15) << "Type" << "Budget Amount" << endl;
 					for (int i = 0; i < budget.vec.size(); i++) {
-						cout << left << setw(17) << i + 1 << setw(25) << budget.vec[i].category << setw(15) << budget.vec[i].type << "$" << budget.vec[i].amount << endl;       //print out unique categories for user.
+						cout << left << setw(17) << i + 1 << setw(25) << budget.vec[i].category << setw(15) << budget.vec[i].type << "$" << budget.vec[i].amount << endl; //print out unique categories for user.
 					}
 					cin >> category;
-					while (cin.fail() || category < 1 || category > budget.vec.size()) {
+					while (cin.fail() || category < 1 || category > budget.vec.size()) {  //user can only enter integers in the range of the size of the vector.
 						cout << "Sorry, that is not valid input.  Please try again. " << endl;
 						cin.clear();   //clears error if users enters a string.
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> category;   //takes new input.
 					}
-					budget.setAmount(budget.vec[category - 1].category);
+					budget.setAmount(budget.vec[category - 1].category);  //pass in the category user entered.
 					break;
 				}//end case 2
 				case 3: {
@@ -209,7 +211,7 @@ int main()
 		case 3: {
 			int answer = 0;
 			do {   //stay in this menu on a loop until user presses 6 to go back or 7 to quit.
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float(3.5) was entered.
 				cout << "Here you can view and edit items that you want to save up for and see how long it will take to acquire them or pay them off." << endl;
 				cout << "Enter 1 to view items." << endl;
 				cout << "Enter 2 to edit an item." << endl;
@@ -236,27 +238,27 @@ int main()
 					break;
 				} //end case 1
 				case 2: {
-					if (saving.objects.size() < 1) {
+					if (saving.objects.size() < 1) {  //if no items entered.
 						cout << "You have not entered any items to save for yet." << endl;
 						cout << endl;
 						break;
 					}
 					int item = 0;
-					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float was entered.
 					cout << "Here's a list of items you are saving for listed by priority. Enter the corresponding number under Priority that you want to edit. " << endl;
 					cout << endl;
 					cout << left << setw(17) << "Priority" << setw(25) << "Item" << "Cost" << endl;
 					for (int i = 0; i < saving.objects.size(); i++) {
-						cout << left << setw(17) << i + 1 << setw(25) << saving.objects[i].item << "$" << saving.objects[i].cost << endl;       //print out items for user.
+						cout << left << setw(17) << i + 1 << setw(25) << saving.objects[i].item << "$" << saving.objects[i].cost << endl; //print out items for user.
 					}
 					cin >> item;
-					while (cin.fail() || item < 1 || item > saving.objects.size()) {
+					while (cin.fail() || item < 1 || item > saving.objects.size()) {    //input has to be integers within size of vector.
 						cout << "Sorry, that is not valid input.  Please try again. " << endl;
 						cin.clear();   //clears error if users enters a string.
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> item;   //takes new input.
 					}
-					saving.editItems(saving.objects[item - 1].item);
+					saving.editItems(saving.objects[item - 1].item);  //pass the item as a string.
 					break;
 				}//end case 2
 				case 3: {
@@ -264,7 +266,7 @@ int main()
 					break;
 				} //end case 3
 				case 4: {
-					if (saving.objects.size() < 1) {
+					if (saving.objects.size() < 1) {   //if no items entered.
 						cout << "You have not entered any items to save for yet." << endl;
 						cout << endl;
 						break;
@@ -288,6 +290,11 @@ int main()
 					break;
 				} //end case 4
 				case 5: {
+					if (saving.objects.size() < 1) {    //if no items entered.
+						cout << "You have not entered any items to save for yet." << endl;
+						cout << endl;
+						break;
+					}
 					saving.projectedAcquisition(budget, budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master), timeinfo);
 					break;
 				}//end case 5

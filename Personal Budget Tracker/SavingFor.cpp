@@ -1,5 +1,4 @@
 #include "SavingFor.h"
-#include <string>
 #include <sstream>
 #include <iostream>
 #include <fstream>   //file input/output
@@ -14,7 +13,7 @@ SavingFor::savingItems::savingItems(string itm, float cst, int pr) {   //sets sa
 }
 
 
-SavingFor::SavingFor(string filename) {     //stores the saving .csv filename and current date.
+SavingFor::SavingFor(string filename) {     //stores the saving .csv filename.
 	savingFileName = filename;
 
 
@@ -69,7 +68,7 @@ void SavingFor::getItems() {     //display a report of items saving for.
 }
 
 void SavingFor::editItems(string item) {                //Can change the cost or priority of an item.
-	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float was entered.
 	int answer = 0;
 	cout << "Enter 1 to change the cost of " << item << "." << endl;
 	cout << "Enter 2 to change the priority of " << item << "." << endl;
@@ -82,7 +81,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 	}
 	switch (answer) {
 	case 1: {
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float was entered.
 		float cost = 0;
 		cout << "Enter a new cost for " << item << "." << endl;
 		cin >> cost;
@@ -103,7 +102,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		break;
 	} //end case 1.
 	case 2: {
-		cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float was entered.
 		int priority = 0;
 		int difference = 0;                   //used to determine if new priority is higher or lower than previous.
 		int size = objects.back().priority;   //size of vector equals the highest priority.
@@ -118,6 +117,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		for (int i = 0; i < objects.size(); i++) { 
 			if (objects[i].item == item && objects[i].priority == priority) {      //if priority already equals the priority user wants.
 				cout << "The priority for " << item << " is already " << priority << "." << endl;
+				cout << endl;
 				return;
 			}
 			else if (objects[i].item == item) {
@@ -135,7 +135,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		if (difference < 0) {                        //if item going up the list.
 			for (int i = 0; i < objects.size(); i++) {
 				if (objects[i].priority == priority && objects[i].item != item) {   //if two items have the same priority now.
-					objects[i].priority += 1;       //increase the priority of the item further down the list by one.
+					objects[i].priority += 1;       //increase the priority of the already existing item at that priority so it goes further down the list by one.
 				}
 			}
 			sort(objects.begin(), objects.end());  //resort vector by adjusted priorities.

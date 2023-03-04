@@ -18,9 +18,10 @@ Accounts::transaction::transaction(string dt, string nm, string cat, float amnt,
 }
 
 
-Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts class.  parameters are beginning cash flow and master account .csv file name.
+Accounts::Accounts(float beg, string fileName, string date) {  //constructor for Accounts class.  parameters are beginning cash flow and master account .csv file name.
 	BEG_CASH_FLOW = beg;
 	accountFileName = fileName;
+	currentDate = date;
 
 	/*Code to parse .csv file into vector taken from,
 	Code Morsels. (2022). How to Parse a CSV File in C++ [Video]. YouTube. https://www.youtube.com/watch?v=NFvxA-57LLA*/
@@ -41,94 +42,92 @@ Accounts::Accounts(float beg, string fileName) {  //constructor for Accounts cla
 
 			stringstream inputString(line);   //stores the first line in stringstream object.
 			getline(inputString, date, ',');  //gets the string up to the comma and puts into the date variable.
-			int countForwardSlash = 0;        //make sure a date only has two backslashes.
 			if (date.length() < 8 || date.length() > 10) { //All dates should be 8 to 10 characters.
 				cerr << "There is a date with an invalid number of characters or no characters in the date column in the .csv file." << endl;  //it's an error.
 				exit(1);
 			}
-			else if (date.length() == 8) {   //date of length 8
-				for (int i = 0; i < date.length(); i++) {
-					if (isdigit((int)date[i]) == false && date[i] != '/') {   //check everything is either a digit or a '/'
-						cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
-						exit(1);
-					}
-					else if (date[i] == '/') {
-						countForwardSlash++;
-					}
-					else if (countForwardSlash > 2) {  //Can only be two forward slashes
-						cerr << "Check the date column in the .csv file for an extra forward slash." << endl;  //it's an error.
-						exit(1);
-					}
-					else if ((i == 1 && date[i] != '/') || (i == 3 && date[i] != '/')) {  //for a date of length 8 the '/' need to be in the 2nd and 4th position.
-						cerr << "Check the date column in the .csv file for an invalid date." << endl;  //it's an error.
-						exit(1);
-					}
-					else if (i == 0 && date[i] == '0') {    //make sure the first digit isn't 0.
-						cerr << "Check the date column in the .csv file for a preceding 0." << endl;  //it's an error.
-						exit(1);
-					}
+			int countForwardSlash = 0;
+			for (int i = 0; i < date.length(); i++) {
+				if (isdigit((int)date[i]) == false && date[i] != '/') {   //check everything is either a digit or a '/'.
+					cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
+					exit(1);
+				}
+				if (date[i] == '/') {      //count forward slashes.
+					countForwardSlash++;
+				}
+				if (countForwardSlash > 2){  //if more than two forward slashes, it's an error.
+					cerr << "Check the date column in the .csv file for an extra forward slash." << endl;  //it's an error.
+					exit(1);
 				}
 			}
+			if (date.length() == 8) {   //date of length 8
+				if (stoi(date.substr(0, 2)) < 1 || stoi(date.substr(0, 2)) > 9) {     //if month not 1-9 it's an error.
+					cerr << "Check the date column in the .csv file for an invalid entry." << endl;  //it's an error.
+					exit(1);
+				}
+				else if (date.substr(1, 1) != "/" || date.substr(3, 1) != "/") {     //forward slashes must be in the second and fourth position.
+					cerr << "Check the date column in the .csv file for an invalid entry." << endl;  //it's an error.
+					exit(1);
+				}
+				else if (stoi(date.substr(2, 1)) == 0) {     //days must be between 1 and 9.
+					cerr << "Check the date column in the .csv file for a day of 0." << endl;  //it's an error.
+					exit(1);
+				}
+				else if (stoi(date.substr(4, 4)) > stoi(currentDate.substr(currentDate.length() - 4))){   //year can't be greater than current year.
+					cerr << "Check the date column in the .csv file for a an invalid year." << endl;  //it's an error.
+					exit(1);
+				}
+			}  //end if date length 8
 			else if (date.length() == 10) {  //date of length 10.
-				for (int i = 0; i < date.length(); i++) {
-					if (isdigit((int)date[i]) == false && date[i] != '/') {
-						cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
-						exit(1);
-					}
-					else if (date[i] == '/') {
-						countForwardSlash++;
-					}
-					else if (countForwardSlash > 2) {
-						cerr << "Check the date column in the.csv file for an extra forward slash." << endl;  //it's an error.
-						exit(1);
-					}
-					else if ((i == 2 && date[i] != '/') || (i == 5 && date[i] != '/')) {   //forward slashes need to be in the 3rd and 6th position.
-						cerr << "Check the date column in the .csv file for an invalid date." << endl;  //it's an error.
-						exit(1);
-					}
-					else if (i == 0 && date[i] == '0') {           //check that the first digit isn't 0.
-						cerr << "Check the date column in the .csv file for a preceding 0." << endl;  //it's an error.
-						exit(1);
-					}
-					else if (stoi(date.substr(0, 2)) > 12) {   //month has to be 10-12.
-						cerr << "Check the date column in the .csv file for a month greater than 12." << endl;  //it's an error.
-						exit(1);
-					}
-					else if (stoi(date.substr(3, 2)) > 31) {     //days can't be greater than 31.
-						cerr << "Check the date column in the .csv file for a day greater than 31." << endl;  //it's an error.
-						exit(1);
-					}
+				if (stoi(date.substr(0, 2)) < 10 || stoi(date.substr(0, 2)) > 12) {     //if month not 10-12 it's an error.
+					cerr << "Check the date column in the .csv file for an invalid entry." << endl;  //it's an error.
+					exit(1);
 				}
-			}
+				else if (date.substr(2, 1) != "/" || date.substr(5, 1) != "/") {     //forward slashes must be in the third and sixth position.
+					cerr << "Check the date column in the .csv file for an invalid entry." << endl;  //it's an error.
+					exit(1);
+				}
+				else if (stoi(date.substr(3, 2)) > 31 || stoi(date.substr(3, 2)) < 10) {     //days must be between 10 and 31.
+					cerr << "Check the date column in the .csv file for an invalid day." << endl;  //it's an error.
+					exit(1);
+				}
+				else if (stoi(date.substr(6, 4)) > stoi(currentDate.substr(currentDate.length() - 4))) {   //year can't be greater than current year.
+					cerr << "Check the date column in the .csv file for a an invalid year." << endl;  //it's an error.
+					exit(1);
+				}
+			} //end if date length 10
 			else if (date.length() == 9) {
-				for (int i = 0; i < date.length(); i++) {
-					if (isdigit((int)date[i]) == false && date[i] != '/') {
-						cerr << "Check the date column in the .csv file for an invalid character." << endl;  //it's an error.
+				if (stoi(date.substr(0, 2)) < 1 || stoi(date.substr(0, 2)) > 12) {     //if month not 1-12 it's an error.
+					cerr << "Check the date column in the .csv file for an invalid month." << endl;  //it's an error.
+					exit(1);
+				}
+				else if (stoi(date.substr(0, 2)) < 10) {                        //months 1-9.
+					if (date.substr(1, 1) != "/" || date.substr(4, 1) != "/") {     //forward slashes must be in the second and fifth position.
+						cerr << "Check the date column in the .csv file for an invalid entry." << endl;  //it's an error.
 						exit(1);
 					}
-					else if (date[i] == '/') {
-						countForwardSlash++;
-					}
-					else if (countForwardSlash > 2) {
-						cerr << "Check the date column in the .csv file for an extra forward slash." << endl;  //it's an error.
-						exit(1);
-					}
-					//else if () {
-						//cerr << "Check the date column in the .csv file for an scrum date." << endl;  //it's an error.
-						//exit(1);
-					//}
-					//else if (stoi(date.substr(2, 2)) > 31) {   //days can't be greater than 31.
-					        // cerr << "Check the date column in the .csv file for a day greater than 31." << endl;  //it's an error.
-							//exit(1);
-						//}
-					//}
-					else if (i == 0 && date[i] == '0') {   //first digit can't be 0.
-						cerr << "Check the date column in the .csv file for a preceding 0." << endl;  //it's an error.
+					else if (stoi(date.substr(2, 2)) > 31 || stoi(date.substr(2, 2)) < 10) {     //days must be between 10 and 31.
+						cerr << "Check the date column in the .csv file for an invalid day." << endl;  //it's an error.
 						exit(1);
 					}
 				}
-			}
-
+				else if (stoi(date.substr(0, 2)) > 9) {          //months 10-12
+					if (date.substr(2, 1) != "/" || date.substr(4, 1) != "/") {     //forward slashes must be in the third and fifth position.
+						cerr << "Check the date column in the .csv file for an invalid entry." << endl;  //it's an error.
+						exit(1);
+					}
+					else if (stoi(date.substr(3, 1)) == 0) {     //days must be between 1 and 9, 0 is the only other option for this length.
+						cerr << "Check the date column in the .csv file for a day of 0." << endl;  //it's an error.
+						exit(1);
+					}
+					
+				}
+				if (stoi(date.substr(5, 4)) > stoi(currentDate.substr(currentDate.length() - 4))) {   //year can't be greater than current year.
+					cerr << "Check the date column in the .csv file for a an invalid year." << endl;  //it's an error.
+					exit(1);
+				}
+			}// end if date length 9
+			
 			getline(inputString, name, ',');
 			if (name == "") {     //check for empty cell.
 				cerr << "Check name column in .csv file for empty cells." << endl;  //it's an error.
