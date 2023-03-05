@@ -1,4 +1,8 @@
-/* Adam Scibelli*/
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the implementation of the Accounts class.
+This reads in the transactions in the master .csv file and contains
+functions for calculating the current cash flow and showing reports of historical transactions.*/
 
 #include "Accounts.h"
 #include <iostream>

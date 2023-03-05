@@ -1,3 +1,9 @@
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the implementation of the SavingFor class.
+This allows the user to view, edit, enter, and delete items to save up for.
+It also provides a timetable of when they can finish paying off items they are saving for.*/
+
 #include "SavingFor.h"
 #include <sstream>
 #include <iostream>
@@ -93,7 +99,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		}
 		for (int i = 0; i < objects.size(); i++) {  //update vector with new cost.
 			if (objects[i].item == item) {
-				objects[i].cost = abs(cost);  //The user can enter a positive or negative number and it turns into a positive.
+				objects[i].cost = abs(cost);  //The user can enter a positive or negative number and abs() turns into a positive.
 				cout << "The cost for " << item << " has been set to $" << objects[i].cost << "." << endl;
 			}
 		}
@@ -108,8 +114,8 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		int size = objects.back().priority;   //size of vector equals the highest priority.
 		cout << "Enter a new priority for " << item << "." << endl;
 		cin >> priority;
-		while (cin.fail() || priority < 1 || priority > objects.size()) {  //input can't be non integer characters or integers less than 1 or greater than the vector size.
-			cout << "Sorry, that is not valid input. Valid input are integers in the range of 1-" << objects.size() + 1 << ". Please try again. " << endl;
+		while (cin.fail() || priority < 1 || priority > size) {  //input can't be non integer characters or integers less than 1 or greater than the vector size.
+			cout << "Sorry, that is not valid input. Valid input are integers in the range of 1-" << size << ". Please try again. " << endl;
 			cin.clear();   //clears error if users enters a string.
 			cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 			cin >> priority;   //takes new input.
@@ -134,12 +140,12 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		sort(objects.begin(), objects.end());         //sort vector by priority.
 		if (difference < 0) {                        //if item going up the list.
 			for (int i = 0; i < objects.size(); i++) {
-				if (objects[i].priority == priority && objects[i].item != item) {   //if two items have the same priority now.
-					objects[i].priority += 1;       //increase the priority of the already existing item at that priority so it goes further down the list by one.
+				if (objects[i].priority == priority && objects[i].item != item) {   //if two items have the same priority now, the existing item will be listed first.
+					objects[i].priority += 1;       //increase the priority of the item that was already at that priority so it goes further down the list by one.
 				}
 			}
 			sort(objects.begin(), objects.end());  //resort vector by adjusted priorities.
-			for (int i = size - 1; i > priority; i--) {  //renumber the priorities on the list lower than the priority user entered.
+			for (int i = size - 1; i > priority; i--) {  //renumber the priorities of items that are further down the list from this item.
 				objects[i].priority = i + 1;
 			}
 		}
@@ -149,7 +155,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 					objects[i].priority = i + 1;
 				}
 				if (i == priority - 1) {   //if two items have the same priority now.
-					objects[i].priority -= 1;       //decrease the priority of the item lower in the list so it moves before the item that had its priority changed.
+					objects[i].priority -= 1;       //decrease the priority of the item lower in the list so it moves before the new item that had its priority changed.
 					sort(objects.begin(), objects.end());  //resort vector by adjusted priorities.
 				}
 			}
@@ -167,7 +173,7 @@ void SavingFor::addItems() {   //function to add an object to be saved for.
 	float cost = 0;
 	int priority = 0;
 	cout << "Enter a name for the item. " << endl;
-	getline(cin, itemName, '\n');
+	getline(cin, itemName, '\n');          //using getline allows spaces in string.
 	while (1) {
 		/*find_if code taken from JL Borges. (2015, July 9). Finding a member in a struct. Cplusplus.com. http://www.cplusplus.com/forum/beginner/169178*/
 		const auto p = std::find_if(objects.begin(), objects.end(),        
@@ -176,6 +182,10 @@ void SavingFor::addItems() {   //function to add an object to be saved for.
 			cout << "That item name already exists in the file. Please choose another name. " << endl;  //can't enter an item already listed.
 			getline(cin, itemName, '\n');
 		}	
+		else if (itemName.length() > 20) {
+			cout << "Sorry, please enter a string of less than 20 characters including spaces. " << endl;  //limit strings to 20 characters.
+			getline(cin, itemName, '\n');
+		}
 		else {
 			break;
 		}
@@ -191,7 +201,7 @@ void SavingFor::addItems() {   //function to add an object to be saved for.
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
 	cout << "Enter the priority for the item. " << endl;
 	cin >> priority;
-	while (cin.fail() || priority < 1 || priority > objects.size() + 1) {  //input can't be non integer characters or integers less than 1 or greater than the vector size +1.
+	while (cin.fail() || priority < 1 || priority > objects.size() + 1) {  //input can't be non integer characters or integers less than 1 or greater than the vector size + 1.
 		cout << "Sorry, that is not valid input. Valid input are integers in the range of 1-" << objects.size() + 1 << ". Please try again. " << endl;
 		cin.clear();   //clears error if users enters a string.
 		cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
@@ -201,7 +211,7 @@ void SavingFor::addItems() {   //function to add an object to be saved for.
 	objects.push_back(fill);                       //push the new item into the vector.
 	sort(objects.begin(), objects.end());         //sort vector by priority.
 	for (int i = 0; i < objects.size(); i++) {
-		if (objects[i].priority == priority && objects[i].item != itemName) {   //if two items have the same priority now.
+		if (objects[i].priority == priority && objects[i].item != itemName) {   //if two items have the same priority now, the existing item will be listed first.
 			objects[i].priority += 1;       //increase the priority of the older item by one.
 		}
 		if (i > priority) {  //increase the priorities of the rest of the items in the list by one.
@@ -224,7 +234,7 @@ void SavingFor::deleteItems(string item) {                //function to delete a
 			for (int j = i; j < objects.size(); j++) {   //starting from saved position, loop through the rest of vector.
 				objects[j].priority--;                   //shift the priority of remaining elements down one.
 			}
-			break;
+			break;                                     //break from the first for loop.
 		}
 	}
 	writeToFile(objects, savingFileName);  //update file with new items.
@@ -246,21 +256,21 @@ void SavingFor::projectedAcquisition(Budget budg, float expectedMoEndCashFlow, s
 	for (int i = 0; i < objects.size(); i++) {
 		cout << left << setw(10) << objects[i].priority << setw(25) << objects[i].item <<
 			"$" << setw(14) << objects[i].cost << "$" << setw(22) << expectedMoEndCashFlow;   //print out the priority, item name, cost, and this month's expected month end cash flow.
-		if (expectedMoEndCashFlow >= objects[i].cost) {               //can afford this month if expected month end cash flow is greater than or equal to cost.
+		if (expectedMoEndCashFlow >= objects[i].cost) {               //can afford item this month if expected month end cash flow is greater than or equal to cost.
 			remainingAmount = 0;                                 //there is no remaining amount to be paid if can cover the entire cost this month.
 		}
 		else if (expectedMoEndCashFlow < objects[i].cost) {
 			remainingAmount = objects[i].cost - expectedMoEndCashFlow;     //else calculate the remaining amount.
 		}
-		cout << "$" << setw(16) << remainingAmount;                    
+		cout << "$" << setw(16) << remainingAmount;                //print out the remaining amount.    
 		if (remainingAmount == 0) {                       
 			expectedMoEndCashFlow -= objects[i].cost;     //adjust the cash flow. Subtract the cost of the item.
 			cout << setw(25) << "-";                      //there is no monthly payment or savings going toward the item if can cover the whole cost this month.
 			cout << month << "/" << year << endl;        //if can cover the whole cost, the acquisition date is the current month and year.
 		}
 		else if (remainingAmount > 0) {
-			expectedMoEndCashFlow = 0;                   //don't have any more cash flow to apply to items.
-			cout << "$" << setw(24) << budg.calcBudgetedMoSavings();   //otherwise apply the monthly savings amount in the budget plan as a payment.
+			expectedMoEndCashFlow = 0;                   //spent all cash flow towards item.
+			cout << "$" << setw(24) << budg.calcBudgetedMoSavings();   //start applying monthly savings amount in the budget plan as a payment.
 			while (remainingAmount > 0) {
 				remainingAmount -= budg.calcBudgetedMoSavings();     //apply the budgeted monthly savings to the item until cost is covered.
 				if (month % 12 == 0) {                    //if month is December.
@@ -272,7 +282,7 @@ void SavingFor::projectedAcquisition(Budget budg, float expectedMoEndCashFlow, s
 				}
 			}
 			expectedMoEndCashFlow = abs(remainingAmount);  //item has been payed off and this is what's left over from the monthly savings for the last month.
-			cout << month << "/" << year << endl;
+			cout << month << "/" << year << endl;         //print out the acquisition date.
 		}
 	}
 	cout << endl;

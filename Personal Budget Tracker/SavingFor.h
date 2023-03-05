@@ -1,3 +1,7 @@
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the SavingFor class structure that is implemented in SavingFor.cpp.*/
+
 #pragma once
 #include "Budget.h"
 using namespace std;

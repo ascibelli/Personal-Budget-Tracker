@@ -1,3 +1,11 @@
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the implementation of the Budget class.
+This allows the user to set budgeted amounts for their transaction categories in the
+master .csv file, calculates the projected month end cash flow and monthly savings, and 
+alerts the user when they go over budget in a category.*/
+
+
 #include "Budget.h"
 #include <iostream>
 #include <fstream>   //file input/output 

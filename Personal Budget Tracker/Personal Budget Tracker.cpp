@@ -1,6 +1,8 @@
 /*Adam Scibelli-3//2023
 SDEV 435-Final Project-Personal Budget Tracker
-This is the main file that instantiates the */
+This is the main file that instantiates the Accounts, Budget, and SavingFor classes.
+It prints out the user's current cash flow, expected month end cash flow, and notifications 
+regarding categories they have gone over budget in, as well as contains the menu interface.*/
 
 #include "Accounts.h"
 #include "Budget.h"
@@ -17,7 +19,6 @@ int main()
 	localtime_s(&timeinfo, &rawtime);
 	char buffer[70];
 	strftime(buffer, 70, "%m/%d/%Y", &timeinfo);  //formats today's date into string buffer.
-	string buf = buffer;
 
 	/*instantiate three classes*/
 	Accounts master((float)500, "MasterAccounts.csv", buffer); //pass in beginning cash flow value(500) before pasting transactions into master .csv file.
@@ -27,7 +28,7 @@ int main()
 	cout << "Hello, today is " << buffer << ". " << endl;
 	/*only print out two decimal places because it's currency.*/
 	cout << "Your current cash flow is $" << fixed << setprecision(2) << master.calcCurrCashFlow() << "." << endl;
-	cout << "Your projected month end cash flow value based on your spending and remaining budget allocations is $"
+	cout << "Your projected month end cash flow value based on your spending so far this month and your remaining budget allocations is $"
 		<< fixed << setprecision(2) << budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master) << "." << endl;//print out expected month end cash flow.
 	budget.budgetAlerts();                   //print out alerts for over budget categories if there are any.
 	cout << endl;
@@ -286,7 +287,7 @@ int main()
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> item;   //takes new input.
 					}
-					saving.deleteItems(saving.objects[item - 1].item);
+					saving.deleteItems(saving.objects[item - 1].item);   //pass in the item as a string.
 					break;
 				} //end case 4
 				case 5: {

@@ -1,3 +1,7 @@
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the Budget class structure that is implemented in Budget.cpp.*/
+
 #pragma once
 #include "Accounts.h" 
 

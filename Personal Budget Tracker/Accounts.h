@@ -1,4 +1,6 @@
-/*Adam Scibelli*/
+/*Adam Scibelli-3//2023
+SDEV 435-Final Project-Personal Budget Tracker
+This is the Accounts class structure that is implemented in Accounts.cpp.*/
 
 #pragma once
 #include <string>
