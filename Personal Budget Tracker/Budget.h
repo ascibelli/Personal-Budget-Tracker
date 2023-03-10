@@ -22,7 +22,7 @@ private:
 public:
 	vector<budgeting> vec;    //vector of budgeting struct.
 	Budget(string fileName, string date, Accounts master);   //constructor for Budget class. 
-	void setAmount(string cat);    //set a budget amount for a category.
+	void setAmount(string cat, Accounts master);    //set a budget amount for a category.
 	void paidVersusBudget(Accounts master);      //will display actual expenditures versus budgeted amounts.
 	void calcMonthlySavings();    //calculates a projected month end savings amount based on the budget and if it is followed.
 	float calcEndMoCashFlow(float currentCashFlow, Accounts master);     //calculates the expected month end cash flow based on actual expenditures and remaining budgeted amounts.

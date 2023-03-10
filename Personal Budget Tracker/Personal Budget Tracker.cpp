@@ -190,7 +190,7 @@ int main()
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
 						cin >> category;   //takes new input.
 					}
-					budget.setAmount(budget.vec[category - 1].category);  //pass in the category user entered.
+					budget.setAmount(budget.vec[category - 1].category, master);  //pass in the category user entered.
 					break;
 				}//end case 2
 				case 3: {

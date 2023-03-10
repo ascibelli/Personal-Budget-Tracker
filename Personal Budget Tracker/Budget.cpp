@@ -76,28 +76,62 @@ Budget::Budget(string fileName, string date, Accounts master) {   //stores the b
 }
 
 
-void Budget::setAmount(string cat) {      //set a budget amount for a category.
+void Budget::setAmount(string cat, Accounts master) {      //set a budget amount for a category.
+	float monthlyTotal = 0;       //for each month's total.
+	float allTimeTotal = 0;      //for average monthly total.
+	set<pair<int, int>>::iterator it;       //iterate through the set of month/years.
+	for (it = master.monthYrs.begin(); it != master.monthYrs.end(); ++it) {  //for each unique month year combo
+		for (int j = 0; j < master.masterAccount.size(); j++) {   //loop through entire masterAccount file for matches.
+			/*if matches category and unique month and year*/
+			if (master.masterAccount[j].category == cat && stoi(master.masterAccount[j].date.substr(0, 2)) == it->second && stoi(master.masterAccount[j].date.substr(master.masterAccount[j].date.length() - 2)) == it->first) {
+				monthlyTotal += master.masterAccount[j].amount;   //add the amounts. resets to 0 for each new month/year combo outside of loop below.
+				allTimeTotal += master.masterAccount[j].amount;   //keep adding all the amounts for an overall average.
+			}
+		}
+		monthlyTotal = 0;     //set back to 0 for next month/year combo.
+	}
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float was entered.
-	float amount = 0;
-	cout << "Enter a new monthly budget amount for " << cat << ". " << endl;
-	cin >> amount;
-	while (cin.fail()) {
-		cout << "Sorry, that is not valid input.  Please try again. " << endl;
-		cin.clear();   //clears error if users enters a string.
-		cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
-		cin >> amount;   //takes new input.
+	string choice = "";
+	/*User can choose to set budget based on monthly average, or can set other amount manually*/
+	cout << "Enter Y to apply your monthly average for " << cat << " of $" << allTimeTotal/master.monthYrs.size() << " as your budgeted amount, or enter N to manually set your own amount. " << endl;
+	cin >> choice;
+	while (choice != "Y" && choice != "N") {       //check for valid input, Y or N.
+		cout << "Sorry, that is not valid input.  Please enter Y or N. " << endl;
+		cin >> choice;
 	}
-	for (int i = 0; i < vec.size(); i++) {  //update vector with new amount
-		if (vec[i].category == cat && vec[i].type == "E") {
-			vec[i].amount = -abs(amount);  //if it's an expense category, make it negative.  The user can enter a positive or negative number.
-			cout << "Budget amount for " << cat << " has been set to $" << vec[i].amount << "." << endl;
-		}
-		else if (vec[i].category == cat && vec[i].type == "I") {
-			vec[i].amount = abs(amount);  //if it's an income category, make it positive.  The user can enter a positive or negative number.
-			cout << "Budget amount for " << cat << " has been set to $" << vec[i].amount << "." << endl;
+	if (choice == "Y") {     //Update budgeted amount with monthly average.
+		for (int i = 0; i < vec.size(); i++) {  //update vector with new amount
+			if (vec[i].category == cat && vec[i].type == "E") {
+				vec[i].amount = -abs(allTimeTotal/master.monthYrs.size());  //if it's an expense category, make it negative.  The user can enter a positive or negative number.
+				cout << "Budget amount for " << cat << " has been set to $" << vec[i].amount << "." << endl;
+			}
+			else if (vec[i].category == cat && vec[i].type == "I") {
+				vec[i].amount = abs(allTimeTotal / master.monthYrs.size());  //if it's an income category, make it positive.  The user can enter a positive or negative number.
+				cout << "Budget amount for " << cat << " has been set to $" << vec[i].amount << "." << endl;
+			}
 		}
 	}
-
+	else if (choice == "N") {  //user chooses any amount.
+		float amount = 0;
+		cout << "Enter a new monthly budget amount for " << cat << ". " << endl;
+		cin >> amount;
+		while (cin.fail()) {
+			cout << "Sorry, that is not valid input.  Please try again. " << endl;
+			cin.clear();   //clears error if users enters a string.
+			cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+			cin >> amount;   //takes new input.
+		}
+		for (int i = 0; i < vec.size(); i++) {  //update vector with new amount
+			if (vec[i].category == cat && vec[i].type == "E") {
+				vec[i].amount = -abs(amount);  //if it's an expense category, make it negative.  The user can enter a positive or negative number.
+				cout << "Budget amount for " << cat << " has been set to $" << vec[i].amount << "." << endl;
+			}
+			else if (vec[i].category == cat && vec[i].type == "I") {
+				vec[i].amount = abs(amount);  //if it's an income category, make it positive.  The user can enter a positive or negative number.
+				cout << "Budget amount for " << cat << " has been set to $" << vec[i].amount << "." << endl;
+			}
+		}
+	}
 	writeToFile(vec, budgetFileName);  //update file with new amount.
 
 	cout << endl;
