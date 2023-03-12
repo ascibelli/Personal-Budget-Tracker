@@ -245,47 +245,126 @@ void SavingFor::deleteItems(string item) {                //function to delete a
 
 
 void SavingFor::projectedAcquisition(Budget budg, float expectedMoEndCashFlow, struct tm time) { //reports on when items can be purchased or paid for.
-	float remainingAmount = 0;
-	int month = 1 + time.tm_mon;
-	int year = 1900 + time.tm_year;
-	cout << "Here's a list of items you are saving for listed by priority and a timeline of when you can aquire them based on your cash flow and budget." << endl;
-	cout << endl;
-	cout << left << setw(10) << "Priority" << setw(25) << "Item" << setw(15) << "Cost" << setw(23) << "Month End Cash Flow" << setw(17) << "Remaining Cost" <<
-		setw(25) << "Monthly Savings/Payment" << "Acquisition Date" << endl;
-	
-	for (int i = 0; i < objects.size(); i++) {
-		cout << left << setw(10) << objects[i].priority << setw(25) << objects[i].item <<
-			"$" << setw(14) << objects[i].cost << "$" << setw(22) << expectedMoEndCashFlow;   //print out the priority, item name, cost, and this month's expected month end cash flow.
-		if (expectedMoEndCashFlow >= objects[i].cost) {               //can afford item this month if expected month end cash flow is greater than or equal to cost.
-			remainingAmount = 0;                                 //there is no remaining amount to be paid if can cover the entire cost this month.
-		}
-		else if (expectedMoEndCashFlow < objects[i].cost) {
-			remainingAmount = objects[i].cost - expectedMoEndCashFlow;     //else calculate the remaining amount.
-		}
-		cout << "$" << setw(16) << remainingAmount;                //print out the remaining amount.    
-		if (remainingAmount == 0) {                       
-			expectedMoEndCashFlow -= objects[i].cost;     //adjust the cash flow. Subtract the cost of the item.
-			cout << setw(25) << "-";                      //there is no monthly payment or savings going toward the item if can cover the whole cost this month.
-			cout << month << "/" << year << endl;        //if can cover the whole cost, the acquisition date is the current month and year.
-		}
-		else if (remainingAmount > 0) {
-			expectedMoEndCashFlow = 0;                   //spent all cash flow towards item.
-			cout << "$" << setw(24) << budg.calcBudgetedMoSavings();   //start applying monthly savings amount in the budget plan as a payment.
-			while (remainingAmount > 0) {
-				remainingAmount -= budg.calcBudgetedMoSavings();     //apply the budgeted monthly savings to the item until cost is covered.
-				if (month % 12 == 0) {                    //if month is December.
-					month = 1;                  //make new month January.
-					year++;                     //and add one to the year.
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
+	int answer = 0;
+	cout << "Enter 1 to view timelines for acquiring items based on the order of priority." << endl;
+	cout << "Enter 2 to view timelines for acquiring items based on equal priority where an equal portion of your monthly savings/payment goes to each." << endl;
+	cin >> answer;
+	while (cin.fail() || answer < 1 || answer > 2) {  //input can't be non integer characters or integers not 1-2.
+		cout << "Sorry, that is not valid input. Please try again. " << endl;
+		cin.clear();   //clears error if users enters a string.
+		cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+		cin >> answer;   //takes new input.
+	}
+	switch (answer) {
+	case 1: {
+		float remainingAmount = 0;
+		int month = 1 + time.tm_mon;          //current month and year.
+		int year = 1900 + time.tm_year;
+		cout << "Here's a list of items you are saving for listed by priority and a timeline of when you can aquire them based on your cash flow and budget." << endl;
+		cout << endl;
+		cout << left << setw(10) << "Priority" << setw(25) << "Item" << setw(15) << "Cost" << setw(23) << "Month End Cash Flow" << setw(17) << "Remaining Cost" <<
+			setw(25) << "Monthly Savings/Payment" << "Acquisition Date" << endl;
+
+		for (int i = 0; i < objects.size(); i++) {
+			cout << left << setw(10) << objects[i].priority << setw(25) << objects[i].item <<
+				"$" << setw(14) << objects[i].cost << "$" << setw(22) << expectedMoEndCashFlow;   //print out the priority, item name, cost, and this month's expected month end cash flow.
+			if (expectedMoEndCashFlow >= objects[i].cost) {               //can afford item this month if expected month end cash flow is greater than or equal to cost.
+				remainingAmount = 0;                                 //there is no remaining amount to be paid if can cover the entire cost this month.
+			}
+			else if (expectedMoEndCashFlow < objects[i].cost) {
+				remainingAmount = objects[i].cost - expectedMoEndCashFlow;     //else calculate the remaining amount.
+			}
+			cout << "$" << setw(16) << remainingAmount;                //print out the remaining amount.    
+			if (remainingAmount == 0) {                       //if acquired this month.
+				expectedMoEndCashFlow -= objects[i].cost;     //adjust the cash flow. Subtract the cost of the item.
+				cout << setw(25) << "-";                      //there is no monthly payment or savings going toward the item if can cover the whole cost this month.
+				cout << month << "/" << year << endl;        //if can cover the whole cost, the acquisition date is the current month and year.
+			}
+			else if (remainingAmount > 0) {                //else if can't fully cover the cost this month
+				cout << "$" << setw(24) << budg.calcBudgetedMoSavings();   //start applying monthly savings amount in the budget plan as a payment.
+				while (remainingAmount > 0) {
+					remainingAmount -= budg.calcBudgetedMoSavings();     //apply the budgeted monthly savings to the item until cost is covered.
+					if (month % 12 == 0) {                    //if month is December.
+						month = 1;                  //make new month January.
+						year++;                     //and add one to the year.
+					}
+					else if (month % 12 > 0) {     //if month not December.
+						month++;                   //add one to the month.
+					}
 				}
-				else if (month % 12 > 0) {     //if month not December.
-					month++;                   //add one to the month.
+				expectedMoEndCashFlow = abs(remainingAmount);  //item has been payed off and this is what's left over from the monthly savings this month to apply to the next item.
+				cout << month << "/" << year << endl;         //print out the acquisition date.
+			}
+		}
+		cout << endl;
+		break;
+	} //end case 1
+	case 2: {
+		int month = 1 + time.tm_mon;          //start at current month and year.
+		int year = 1900 + time.tm_year;
+		int size = (int)objects.size();       //keep track of how many items still need to be payed off and allocated a portion of the monthly savings.
+		float total = 0;                     //total cost of all items.
+		struct equal {                     //for temporary vector holding the saving items.
+			string item;
+			float cost = 0;
+			bool operator < (const equal& rhs) const {  //sorts the vector by cost when sort() used.
+				return cost < rhs.cost;
+			}
+		};
+		vector <equal> equalPriorities(objects.size());     //declare vector.
+		for (int i = 0; i < objects.size(); i++) {          //copy items in the objects vector to temp vector.
+			equalPriorities[i].item = objects[i].item;
+			equalPriorities[i].cost = objects[i].cost;
+			total += objects[i].cost;                      //add all the costs of the items for a total.
+		}
+		sort(equalPriorities.begin(), equalPriorities.end());   //sort by cost.
+
+		cout << "Here's a list of items you are saving for listed in order of their cost and timelines to acquire them based on equal monthly allocations." << endl;
+		cout << endl;
+
+		while (total > 0) {               //when total is 0 all items payed off/acquired.
+			cout << month << "/" << year;    //This prints out blocks of month/years for one month at a time.
+			cout << endl;
+			cout << left << setw(25) << "Item" << setw(24) << "Mo. Begin Cost" << setw(30) << "Monthly Cash Flow Portion" << "Mo. End Remaining Cost" << endl;
+			for (int i = 0; i < equalPriorities.size(); i++) {
+				if (equalPriorities[i].cost > 0) {                          //only concerned with items haven't fully acquired yet. Remove the ones that have been.
+					cout << left << setw(25) << equalPriorities[i].item <<
+						"$" << setw(23) << equalPriorities[i].cost << "$" << setw(29) << expectedMoEndCashFlow / size; //expectedMoEndCashFlow/size is the equal monthly payment.
+					if (expectedMoEndCashFlow / size >= equalPriorities[i].cost) {   //can afford item this month.
+						total -= equalPriorities[i].cost;                  //reduce the total by the cost.
+						expectedMoEndCashFlow -= equalPriorities[i].cost;  //reduce cash flow by the full cost of the item.
+						size--;                                             //reduce size. This item no longers factors in to an equal monthly portion.
+						equalPriorities[i].cost = 0;   //there is no remaining amount to be paid if can cover the entire cost this month.
+						cout << "$" << equalPriorities[i].cost << endl;                //print out $0.00 remaining.
+					}
+					else if (expectedMoEndCashFlow / size < equalPriorities[i].cost) {  //else can't cover full cost this month.
+						total -= expectedMoEndCashFlow / size;                      //reduce the total by payment applied this month.
+						equalPriorities[i].cost -= expectedMoEndCashFlow / size;     //reduce the cost by the payment to get remaining cost.
+						cout << "$" << equalPriorities[i].cost << endl;                //print out the remaining amount.
+					}
 				}
 			}
-			expectedMoEndCashFlow = abs(remainingAmount);  //item has been payed off and this is what's left over from the monthly savings for the last month.
-			cout << month << "/" << year << endl;         //print out the acquisition date.
+			/*This is here to fix rounding issues. It's possible to have the total reduced to a really small decimal like 0.00125
+			and it will never reduce to 0 because all the items' costs have been reduced to 0 so it just stays in an infinite while loop.*/
+			if (size == 0) { 
+				total = 0;
+			}
+			expectedMoEndCashFlow = budg.calcBudgetedMoSavings();  //if need to go into another month all the cash flow has been reduced to 0, this is next month's savings to be applied.
+
+			if (month % 12 == 0) {                    //if month is December.
+				month = 1;                  //make new month January.
+				year++;                     //and add one to the year.
+			}
+			else if (month % 12 > 0) {     //if month not December.
+				month++;                   //add one to the month.
+			}
+			cout << endl;
 		}
-	}
-	cout << endl;
+		cout << endl;
+		break;
+	} // end case 2
+	} // end switch
 }
 
 
