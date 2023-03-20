@@ -1,4 +1,4 @@
-/*Adam Scibelli-3//2023
+/*Adam Scibelli-3/19/2023
 SDEV 435-Final Project-Personal Budget Tracker
 This is the implementation of the Budget class.
 This allows the user to set budgeted amounts for their transaction categories in the
@@ -9,7 +9,7 @@ alerts the user when they go over budget in a category.*/
 #include "Budget.h"
 #include <iostream>
 #include <fstream>   //file input/output 
-#include <sstream>   //stringstream
+#include <sstream>   //stringstream, read in .csv file
 #include <iomanip>
 using namespace std;
 
@@ -30,7 +30,7 @@ Budget::Budget(string fileName, string date, Accounts master) {   //stores the b
 		for (int j = 0; j < master.masterAccount.size(); j++) {    //bring in its type from the masterAccount .csv file.
 			if (master.uniqueCategories[i] == master.masterAccount[j].category) {
 				transType = master.masterAccount[j].type;
-				break;          //as soon as a type gets pulled in can break out of the loop.
+				break;          //as soon as a type gets pulled in from a category can break out of the loop.
 			}
 		}
 		budgeting fill(master.uniqueCategories[i], (float)0.00, transType); //fill the budget vector with unique categories and with default $0.00 values and the type.

@@ -1,4 +1,4 @@
-/*Adam Scibelli-3//2023
+/*Adam Scibelli-3/19/2023
 SDEV 435-Final Project-Personal Budget Tracker
 This is the implementation of the Accounts class.
 This reads in the transactions in the master .csv file and contains
@@ -7,7 +7,7 @@ functions for calculating the current cash flow and showing reports of historica
 #include "Accounts.h"
 #include <iostream>
 #include <fstream>   //file input/output 
-#include <sstream>   //stringstream
+#include <sstream>   //stringstream, reading in .csv file
 #include <algorithm>  //for getting unique categories.
 #include <iomanip> //for setprecision in calcCurrCashFlow()
 using namespace std;
@@ -22,7 +22,7 @@ Accounts::transaction::transaction(string dt, string nm, string cat, float amnt,
 }
 
 
-Accounts::Accounts(float beg, string fileName, string date) {  //constructor for Accounts class.  parameters are beginning cash flow and master account .csv file name.
+Accounts::Accounts(float beg, string fileName, string date) {  //constructor for Accounts class.  parameters are beginning cash flow, master account .csv file name, and today's date.
 	BEG_CASH_FLOW = beg;
 	accountFileName = fileName;
 	currentDate = date;
@@ -263,7 +263,7 @@ void Accounts::getAllTransMo(int mo, int yr) {  //gets all transactions in a spe
 		cout << endl;
 		return;
 	}
-	cout << "Here are all the transactions for " << mo << "/" << yr << "." << endl;
+	cout << "Here are all the transactions for " << mo << "/" << yr << "." << endl;  //else print out transactions.
 	cout << endl;
 	cout << left << setw(13) << "Date" << setw(40) << "Transaction" << setw(30) << "Category" << setw(20) << "Amount" << setw(8) << "Type" << "Account" << endl;
 	for (int i = 0; i < masterAccount.size(); i++) {    //loop through the whole master file. print out every transaction if month and year match.
@@ -320,8 +320,8 @@ void Accounts::getMonthEndCashFlows() {    //calculates month end cash flow valu
 
 	set<pair<int, int>>::iterator it;   //going to loop through the unique set of months and years.
 	set<pair<int, int>>::iterator itt = monthYrs.end();  //store in iterator for the current month and year.
-	--itt;                              //decrement iterator because still not at month end yet for current month and year and don't want to print that.
-	for (it = monthYrs.begin(); it != itt; ++it) {          //loop through unique months and years until the current month and year.
+	--itt;                              //decrement iterator because still not at month end yet for current month and don't want to print that.
+	for (it = monthYrs.begin(); it != itt; ++it) {          //loop through unique months and years until previous month.
 		for (int j = 0; j < masterAccount.size(); j++) {   //loop through entire masterAccount file.
 			/*if matches unique month and year*/
 			if (stoi(masterAccount[j].date.substr(0, 2)) == it->second && stoi(masterAccount[j].date.substr(masterAccount[j].date.length() - 2)) == it->first) {

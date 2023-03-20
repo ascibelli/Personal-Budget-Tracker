@@ -1,4 +1,4 @@
-/*Adam Scibelli-3//2023
+/*Adam Scibelli-3/19/2023
 SDEV 435-Final Project-Personal Budget Tracker
 This is the Budget class structure that is implemented in Budget.cpp.*/
 
@@ -10,21 +10,21 @@ using namespace std;
 class Budget
 {
 private:
-	struct budgeting {  //budget by category and amount.
-		string category;     //income/expense category.
+	struct budgeting {  //budget by category, amount, and type.
+		string category;     //from unique categories in master .csv file.
 		float amount;       //budgeted amount.
 		string type;        //I=income, E=expense.
 		budgeting(string cat, float amnt, string typ);  //constructor for budgeting struct.
 	};
 	string budgetFileName;    //.csv filename for saving the budget settings.
 	string currentDate;     //holds the current date.
-	vector<budgeting> overBudget; //vector of categories that have gone over expected budget for alerts.
+	vector<budgeting> overBudget; //vector of categories that have gone over expected budget for budgetAlerts() function and expected Month end calculations.
 public:
 	vector<budgeting> vec;    //vector of budgeting struct.
 	Budget(string fileName, string date, Accounts master);   //constructor for Budget class. 
 	void setAmount(string cat, Accounts master);    //set a budget amount for a category.
 	void paidVersusBudget(Accounts master);      //will display actual expenditures versus budgeted amounts.
-	void calcMonthlySavings();    //calculates a projected month end savings amount based on the budget and if it is followed.
+	void calcMonthlySavings();    //calculates a projected month end savings amount based on the budget and if the budget is followed.
 	float calcEndMoCashFlow(float currentCashFlow, Accounts master);     //calculates the expected month end cash flow based on actual expenditures and remaining budgeted amounts.
 	void budgetAlerts();       //alerts the user when they are over budget on categories.
 	template <typename T>  //template function to write any type of vector to columns and rows in a .csv file.          

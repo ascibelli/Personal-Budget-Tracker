@@ -1,4 +1,4 @@
-/*Adam Scibelli-3//2023
+/*Adam Scibelli-3/19/2023
 SDEV 435-Final Project-Personal Budget Tracker
 This is the Accounts class structure that is implemented in Accounts.cpp.*/
 
@@ -11,11 +11,11 @@ using namespace std;
 class Accounts
 {
 private:
-	float BEG_CASH_FLOW;    //This is the user's cash flow before using the program for the first time.
+	float BEG_CASH_FLOW;    //This is the user's cash flow before pasting in transactions and using the program for the first time.
 	struct transaction {  //models a transaction and the .csv masterAccounts file.
 		string date;     //date of transaction.
 		string name;     //name of transaction.
-		string category; //type of transaction.
+		string category; //classification of transaction.
 		float amount;   //amount of transaction.
 		string type;     // income=I, expense=E.
 		string accountType;  //checking/credit/savings.
@@ -28,7 +28,7 @@ public:
 	set<pair<int, int>> monthYrs;      //for storing month year combinations in the .csv file.
 	vector<transaction> masterAccount;  //vector of type transaction to push transactions from .csv file into.
 	vector<string> uniqueCategories;    //stores unique values for the categories field in the .csv file.
-	Accounts(float beg, string fileName, string date);  //constructor for Accounts class.  Takes beginning cash flow and .csv file name.
+	Accounts(float beg, string fileName, string date);  //constructor for Accounts class.  Takes beginning cash flow, .csv file name, and current date.
 	float calcCurrCashFlow();   //calculates the current cash flow value.
 	void getAllTransMo(int mo, int yr);    //gets all transactions in a specific month and year.
 	void getCatAllTime(string cat); //gets all transactions in a specific category all time.

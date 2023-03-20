@@ -1,11 +1,11 @@
-/*Adam Scibelli-3//2023
+/*Adam Scibelli-3/19/2023
 SDEV 435-Final Project-Personal Budget Tracker
 This is the implementation of the SavingFor class.
 This allows the user to view, edit, enter, and delete items to save up for.
 It also provides a timetable of when they can finish paying off items they are saving for.*/
 
 #include "SavingFor.h"
-#include <sstream>
+#include <sstream>   //read in .csv file.
 #include <iostream>
 #include <fstream>   //file input/output
 #include <algorithm>
@@ -282,6 +282,12 @@ void SavingFor::projectedAcquisition(Budget budg, float expectedMoEndCashFlow, s
 				cout << month << "/" << year << endl;        //if can cover the whole cost, the acquisition date is the current month and year.
 			}
 			else if (remainingAmount > 0) {                //else if can't fully cover the cost this month
+				if (budg.calcBudgetedMoSavings() <= 0) {   //if can't apply a monthly payment or save more money.
+					cout << endl;
+					cout << "You cannot afford any more towards items without a positive monthly savings amount in your budget." << endl;
+					cout << endl;
+					return;
+				}
 				cout << "$" << setw(24) << budg.calcBudgetedMoSavings();   //start applying monthly savings amount in the budget plan as a payment.
 				while (remainingAmount > 0) {
 					remainingAmount -= budg.calcBudgetedMoSavings();     //apply the budgeted monthly savings to the item until cost is covered.
@@ -344,6 +350,12 @@ void SavingFor::projectedAcquisition(Budget budg, float expectedMoEndCashFlow, s
 						cout << "$" << equalPriorities[i].cost << endl;                //print out the remaining amount.
 					}
 				}
+			}
+			if (budg.calcBudgetedMoSavings() <= 0) {   //if can't apply a monthly payment or save more money.
+				cout << endl;
+				cout << "You cannot afford any more towards items without a positive monthly savings amount in your budget." << endl;
+				cout << endl;
+				return;
 			}
 			/*This is here to fix rounding issues. It's possible to have the total reduced to a really small decimal like 0.00125
 			and it will never reduce to 0 because all the items' costs have been reduced to 0 so it just stays in an infinite while loop.*/

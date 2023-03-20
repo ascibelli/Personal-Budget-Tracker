@@ -1,4 +1,4 @@
-/*Adam Scibelli-3//2023
+/*Adam Scibelli-3/19/2023
 SDEV 435-Final Project-Personal Budget Tracker
 This is the main file that instantiates the Accounts, Budget, and SavingFor classes.
 It prints out the user's current cash flow, expected month end cash flow, and notifications 
@@ -21,7 +21,7 @@ int main()
 	strftime(buffer, 70, "%m/%d/%Y", &timeinfo);  //formats today's date into string buffer.
 
 	/*instantiate three classes*/
-	Accounts master((float)500, "MasterAccounts.csv", buffer); //pass in beginning cash flow value(500) before pasting transactions into master .csv file.
+	Accounts master((float)100, "MasterAccounts.csv", buffer); //pass in beginning cash flow value(100) before pasting transactions into master .csv file.
 	Budget budget("Budget.csv", buffer, master);
 	SavingFor saving("Saving.csv");
 
@@ -29,13 +29,13 @@ int main()
 	/*only print out two decimal places because it's currency.*/
 	cout << "Your current cash flow is $" << fixed << setprecision(2) << master.calcCurrCashFlow() << "." << endl;
 	cout << "Your projected month end cash flow value based on your spending so far this month and your remaining budget allocations is $"
-		<< fixed << setprecision(2) << budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master) << "." << endl;//print out expected month end cash flow.
+		<< fixed << setprecision(2) << budget.calcEndMoCashFlow(master.calcCurrCashFlow(), master) << "." << endl; //print out expected month end cash flow.
 	budget.budgetAlerts();                   //print out alerts for over budget categories if there are any.
 	cout << endl;
 
 
 	while (1) {  //menu runs in an infinite loop.
-		int option = 0;     //user enter a number from the menu based on what they want to do.
+		int option = 0;     //user enters a number from the menu based on what they want to do.
 		cout << "Welcome to the main menu." << endl;
 		cout << "What would you like to do?" << endl;
 		cout << "Enter 1 to see historical transactions and balances." << endl;
@@ -82,9 +82,9 @@ int main()
 						cin >> month;   //takes new input.
 					}
 					cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float(1.2) was entered.
-					cout << "Enter the year as a number from 1-99.  For example, 2001 should be entered as 1 and 2099 should be entered as 99. " << endl; 
+					cout << "Enter the year as a number from 0-99.  For example, 2000 should be entered as 0 and 2099 should be entered as 99. " << endl; 
 					cin >> year;
-					while (cin.fail() || year < 1 || year > 99) {  //input can't be non integer characters or integers not 00-99.
+					while (cin.fail() || year < 0 || year > 99) {  //input can't be non integer characters or integers not 0-99.
 						cout << "Sorry, that is not valid input. Please try again. " << endl;
 						cin.clear();   //clears error if users enters a string.
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
@@ -143,6 +143,7 @@ int main()
 					exit(0);     //terminates program.
 				} //end switch
 			} while (answer != 5);
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float (5.5) was entered in error.
 			break;     //breaks out so program stays in main menu loop.
 		} //end case 1
 		case 2: {
@@ -207,6 +208,7 @@ int main()
 					exit(0);     //terminates program.
 				} //end switch
 			} while (answer != 5);
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float (5.5) was entered in error.
 			break;
 		} //end case 2
 		case 3: {
@@ -303,6 +305,7 @@ int main()
 					exit(0);     //terminates program.
 				} //end switch
 			} while (answer != 6);
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case a float (6.5) was entered in error.
 			break;
 		} //end case 3
 		case 4:
