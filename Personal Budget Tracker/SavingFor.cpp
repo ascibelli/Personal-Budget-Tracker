@@ -76,14 +76,27 @@ void SavingFor::getItems() {     //display a report of items saving for.
 void SavingFor::editItems(string item) {                //Can change the cost or priority of an item.
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float was entered.
 	int answer = 0;
+	int size = objects.back().priority;   //size of vector equals the highest priority.
 	cout << "Enter 1 to change the cost of " << item << "." << endl;
-	cout << "Enter 2 to change the priority of " << item << "." << endl;
+	if (size > 1) {                       //only allow a priority change if more than one item.
+		cout << "Enter 2 to change the priority of " << item << "." << endl;
+	}
 	cin >> answer;
-	while (cin.fail() || answer < 1 || answer > 2) {  //input can't be non integer characters or integers not 1-2.
-		cout << "Sorry, that is not valid input. Please try again. " << endl;
-		cin.clear();   //clears error if users enters a string.
-		cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
-		cin >> answer;   //takes new input.
+	if (size == 1) {
+		while (cin.fail() || answer < 1 || answer > 1) {  //input can't be non integer characters or integers not 1-1.
+			cout << "Sorry, that is not valid input. Please try again. " << endl;
+			cin.clear();   //clears error if users enters a string.
+			cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+			cin >> answer;   //takes new input.
+		}
+	}
+	else if (size > 1) {
+		while (cin.fail() || answer < 1 || answer > 2) {  //input can't be non integer characters or integers not 1-2.
+			cout << "Sorry, that is not valid input. Please try again. " << endl;
+			cin.clear();   //clears error if users enters a string.
+			cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
+			cin >> answer;   //takes new input.
+		}
 	}
 	switch (answer) {
 	case 1: {
@@ -111,7 +124,6 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu in case float was entered.
 		int priority = 0;
 		int difference = 0;                   //used to determine if new priority is higher or lower than previous.
-		int size = objects.back().priority;   //size of vector equals the highest priority.
 		cout << "Enter a new priority for " << item << "." << endl;
 		cin >> priority;
 		while (cin.fail() || priority < 1 || priority > size) {  //input can't be non integer characters or integers less than 1 or greater than the vector size.
@@ -145,7 +157,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 				}
 			}
 			sort(objects.begin(), objects.end());  //resort vector by adjusted priorities.
-			for (int i = size - 1; i > priority; i--) {  //renumber the priorities of items that are further down the list from this item.
+			for (int i = size - 1; i > priority; i--) {  //renumber the priorities of items that are further down the list from this item by one.
 				objects[i].priority = i + 1;
 			}
 		}
