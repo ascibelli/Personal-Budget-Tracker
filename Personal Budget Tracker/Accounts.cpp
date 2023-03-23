@@ -21,6 +21,12 @@ Accounts::transaction::transaction(string dt, string nm, string cat, float amnt,
 	accountType = acntType;
 }
 
+Accounts::Date::Date(int d, int m, int y) {   //constructor for Date struct
+	day = d;
+	month = m;
+	year = y;
+}
+
 
 Accounts::Accounts(float beg, string fileName, string date) {  //constructor for Accounts class.  parameters are beginning cash flow, master account .csv file name, and today's date.
 	BEG_CASH_FLOW = beg;
@@ -59,7 +65,7 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 				if (date[i] == '/') {      //count forward slashes.
 					countForwardSlash++;
 				}
-				if (countForwardSlash > 2){  //if more than two forward slashes, it's an error.
+				if (countForwardSlash > 2) {  //if more than two forward slashes, it's an error.
 					cerr << "Check the date column in the .csv file for an extra forward slash." << endl;  //it's an error.
 					exit(1);
 				}
@@ -77,10 +83,15 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 					cerr << "Check the date column in the .csv file for a day of 0." << endl;  //it's an error.
 					exit(1);
 				}
-				else if (stoi(date.substr(4, 4)) > stoi(currentDate.substr(currentDate.length() - 4))){   //year can't be greater than current year.
+				else if (stoi(date.substr(4, 4)) > stoi(currentDate.substr(currentDate.length() - 4))) {   //year can't be greater than current year.
 					cerr << "Check the date column in the .csv file for a an invalid year." << endl;  //it's an error.
 					exit(1);
 				}
+
+				Date temp(stoi(date.substr(2, 1)), stoi(date.substr(0, 2)), stoi(date.substr(4, 4)));  //Fill the same day, month, year in both vectors.
+				dateArray1.push_back(temp);      //will sort this one oldest to newest and see if it still matches dateArray2.
+				dateArray2.push_back(temp);
+
 			}  //end if date length 8
 			else if (date.length() == 10) {  //date of length 10.
 				if (stoi(date.substr(0, 2)) < 10 || stoi(date.substr(0, 2)) > 12) {     //if month not 10-12 it's an error.
@@ -99,6 +110,9 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 					cerr << "Check the date column in the .csv file for a an invalid year." << endl;  //it's an error.
 					exit(1);
 				}
+				Date temp(stoi(date.substr(3, 2)), stoi(date.substr(0, 2)), stoi(date.substr(6, 4)));  //Fill the same day, month, year in both vectors.
+				dateArray1.push_back(temp);     //will sort this one oldest to newest and see if it still matches dateArray2.
+				dateArray2.push_back(temp);
 			} //end if date length 10
 			else if (date.length() == 9) {
 				if (stoi(date.substr(0, 2)) < 1 || stoi(date.substr(0, 2)) > 12) {     //if month not 1-12 it's an error.
@@ -114,6 +128,9 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 						cerr << "Check the date column in the .csv file for an invalid day." << endl;  //it's an error.
 						exit(1);
 					}
+					Date temp(stoi(date.substr(2, 2)), stoi(date.substr(0, 2)), stoi(date.substr(5, 4)));  //Fill the same day, month, year in both vectors.
+					dateArray1.push_back(temp);   //will sort this one oldest to newest and see if it still matches dateArray2.
+					dateArray2.push_back(temp);
 				}
 				else if (stoi(date.substr(0, 2)) > 9) {          //months 10-12
 					if (date.substr(2, 1) != "/" || date.substr(4, 1) != "/") {     //forward slashes must be in the third and fifth position.
@@ -124,14 +141,16 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 						cerr << "Check the date column in the .csv file for a day of 0." << endl;  //it's an error.
 						exit(1);
 					}
-					
+					Date temp(stoi(date.substr(3, 1)), stoi(date.substr(0, 2)), stoi(date.substr(5, 4)));  //Fill the same day, month, year in both vectors.
+					dateArray1.push_back(temp);   //will sort this one oldest to newest and see if it still matches dateArray2.
+					dateArray2.push_back(temp);
 				}
 				if (stoi(date.substr(5, 4)) > stoi(currentDate.substr(currentDate.length() - 4))) {   //year can't be greater than current year.
 					cerr << "Check the date column in the .csv file for a an invalid year." << endl;  //it's an error.
 					exit(1);
 				}
 			}// end if date length 9
-			
+
 			getline(inputString, name, ',');
 			if (name == "") {     //check for empty cell.
 				cerr << "Check name column in .csv file for empty cells." << endl;  //it's an error.
@@ -162,7 +181,7 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 			/*the next for loop checks the amount column for invalid data*/
 			for (int i = 0; i < tempString.length(); i++) {
 				if (isdigit((int)tempString[i]) == false && tempString[i] != '.' && tempString[i] != '-') {  //if character is non digit and not a '.' or '-'.
-					cerr << "Check amount column in masterAccount .csv file for invalid entries." << endl;  //it's an error.
+					cerr << "Check amount column in masterAccount .csv file for invalid entries or incorrect format." << endl;  //it's an error.
 					exit(1);
 				}
 				else if (tempString[i] == '.') {  //should only have 1 '.' in amount data.
@@ -188,9 +207,9 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 
 			getline(inputString, type, ',');
 			if (type != "I" && type != "E") {  //'I' and 'E' are the only valid entries for this column
-					cerr << "Check type column in .csv file for invalid entries or blank cells." << endl;  //it's an error.
-					exit(1);
-				}
+				cerr << "Check type column in .csv file for invalid entries or blank cells." << endl;  //it's an error.
+				exit(1);
+			}
 			else if (type == "I" && amount < 0) {  //income should positive.
 				cerr << "There is a negative value labelled as income." << endl;  //it's an error.
 				exit(1);
@@ -200,7 +219,7 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 				exit(1);
 			}
 			getline(inputString, accountType, ',');
-			if (accountType != "Checking" && accountType != "Credit") {  //these are the only two valid options
+			if (accountType != "Checking" && accountType != "Credit" && accountType != "Savings") {  //these are the only three valid options.
 				cerr << "Check account type column in .csv file for invalid entries or blank cells." << endl;  //it's an error.
 				exit(1);
 			}
@@ -210,12 +229,39 @@ Accounts::Accounts(float beg, string fileName, string date) {  //constructor for
 
 			line = "";  // resets the line to empty string for next row.
 		} //end while getline
+
+		/*This next section of code sorts the dateArray1 oldest to newest.
+		Compare function taken from Geeksforgeeks.org. (May 10, 2019). How to sort an array of dates in C/C++?
+		 https://www.geeksforgeeks.org/how-to-sort-an-array-of-dates-in-cc/ */
+		sort(dateArray1.begin(), dateArray1.end(), [](const Date& d1, const Date& d2) {
+			// All cases when true should be returned
+			if (d1.year < d2.year)
+				return true;
+			if (d1.year == d2.year && d1.month < d2.month)
+				return true;
+			if (d1.year == d2.year && d1.month == d2.month &&
+				d1.day < d2.day)
+				return true;
+
+			// If none of the above cases satisfy, return false
+			return false; 
+			});
+
+		/*This then checks to see if there is any difference to dateArray2 after dateArray1 has been sorted. If there is,
+		  dateArray2 is not sorted from oldest to newest. Report the error.*/
+		for (int i = 0; i < dateArray1.size(); i++) {   
+			if (dateArray1[i].day != dateArray2[i].day || dateArray1[i].month != dateArray2[i].month || dateArray1[i].year != dateArray2[i].year) {
+				cerr << "Please sort the master file on column A (date) oldest to newest." << endl;
+				exit(1);
+			}
+		}
+
 	} //end if file open
 	else {
 		cerr << "masterAccount file failed to open." << endl;  //file couldn't open.
 		exit(1);  //exit on purpose.
 	}
-	inputFile.close();  //close file	
+	inputFile.close();  //close file
 
 	/*The uniqueCategories vector is used in the historical transactions sub menu and Budget class.*/
 	vector<string> categories(masterAccount.size());   //set up a temp vector of string to read categories into.

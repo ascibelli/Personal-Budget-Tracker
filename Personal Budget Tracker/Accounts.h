@@ -21,6 +21,14 @@ private:
 		string accountType;  //checking/credit/savings.
 		transaction(string dt, string nm, string cat, float amnt, string typ, string acntType);  //constructor for transaction to set values.
 	};
+	struct Date{        //date struct used to make sure the .csv file is sorted from oldest to newest.
+		int day;
+		int	month;
+		int	year;
+		Date(int d, int m, int y);    //constructor for Date truct.
+	};
+	vector<Date> dateArray1;     //will compare two vectors of dates, one sorted in the code, the other as it is taken in from the file to see if they match.
+	vector<Date> dateArray2;    
 	string accountFileName;  //the .csv file name.
 	float currCashFlow;     //the result of beginning cash flow +/- all transactions in the .csv masterAccount file.
 	string currentDate;

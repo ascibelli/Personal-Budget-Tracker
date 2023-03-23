@@ -10,7 +10,6 @@
 1/8/2022,THE HOME DEPOT,Miscellaneous,-26.53,E,Credit
 1/8/2022,SHAWS,Food,-65.05,E,Credit
 1/8/2022,LIBERTY BELL ROAST BEEF,Take-Out,-18.46,E,Credit
-1/10/2022,Atm Withdrawal,Miscellaneous,-60,E,Checking
 1/10/2022,Atm Deposit,Other Income,800,I,Checking
 1/10/2022,Gas,Gas,-32.66,E,Credit
 1/11/2022,GOVERNMENT CENTER,Parking,-42,E,Credit
@@ -36,6 +35,7 @@
 1/21/2022,STOP & SHOP,Food,-27.96,E,Credit
 1/22/2022,WHOLEFDS,Food,-54.84,E,Credit
 1/23/2022,RICHDALE DAIRY,Food,-16.64,E,Credit
+1/25/2022,Atm Withdrawal,Miscellaneous,-60,E,Checking
 1/26/2022,RICHDALE DAIRY,Food,-17.21,E,Credit
 1/27/2022,Healthcare Provider,Health Care,-72.8,E,Checking
 1/27/2022,LIBERTY BELL ROAST BEEF,Take-Out,-18.46,E,Credit
@@ -153,13 +153,13 @@
 4/12/2022,Anytime Fitness,Gym,-39,E,Checking
 4/14/2022,BOB MARKET,Food,-14.43,E,Credit
 4/14/2022,LIBERTY BELL ROAST BEEF,Take-Out,-18.46,E,Credit
+4/14/2022,LIBERTY BELL ROAST BEEF,Take-Out,-18.46,E,Credit
 4/15/2022,RICHDALE DAIRY,Food,-4.99,E,Credit
 4/15/2022,STOP & SHOP,Food,-78,E,Credit
 4/15/2022,WALGREENS,Miscellaneous,-48.96,E,Credit
+4/15/2022,BOB MARKET,Food,-10.45,E,Credit
 4/16/2022,Dental Provider,Dental Care,-206,E,Credit
 4/17/2022,RICHDALE DAIRY,Food,-8.48,E,Credit
-4/18/2022,LIBERTY BELL ROAST BEEF,Take-Out,-18.46,E,Credit
-4/18/2022,BOB MARKET,Food,-10.45,E,Credit
 4/19/2022,Atm Withdrawal,Miscellaneous,-60,E,Checking
 4/21/2022,BOB MARKET,Food,-17.44,E,Credit
 4/22/2022,Liaison International,Work Income,1039.79,I,Checking
@@ -225,9 +225,9 @@
 6/13/2022,Anytime Fitness,Gym,-39,E,Checking
 6/16/2022,Dental Provider,Dental Care,-206,E,Credit
 6/17/2022,Liaison International,Work Income,955.34,I,Checking
-6/17/2022,BOB MARKET,Food,-17.94,E,Credit
-6/18/2022,SHAWS,Food,-95.21,E,Credit
-6/19/2022,STOP & SHOP,Food,-19,E,Credit
+6/19/2022,SHAWS,Food,-95.21,E,Credit
+6/20/2022,BOB MARKET,Food,-17.94,E,Credit
+6/20/2022,STOP & SHOP,Food,-19,E,Credit
 6/20/2022,BOB MARKET,Food,-19.93,E,Credit
 6/20/2022,KEURIG GREEN MOUNTAIN,Food,-41.97,E,Credit
 6/21/2022,CVS,Miscellaneous,-45.99,E,Checking
