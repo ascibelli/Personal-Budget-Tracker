@@ -211,7 +211,7 @@ void SavingFor::addItems() {   //function to add an object to be saved for.
 		cin >> cost;   //takes new input.
 	}
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');   //discards input buffer from previous menu.
-	cout << "Enter the priority for the item. " << endl;
+	cout << "Enter the priority for the item as an integer. Do you want this item first? Enter 1 in that case. " << endl;
 	cin >> priority;
 	while (cin.fail() || priority < 1 || priority > objects.size() + 1) {  //input can't be non integer characters or integers less than 1 or greater than the vector size + 1.
 		cout << "Sorry, that is not valid input. Valid input are integers in the range of 1-" << objects.size() + 1 << ". Please try again. " << endl;
