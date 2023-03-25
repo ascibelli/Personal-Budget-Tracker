@@ -132,6 +132,25 @@ void Budget::setAmount(string cat, Accounts master) {      //set a budget amount
 			}
 		}
 	}
+	/*Reset the overBudget vector to accounts for new amount entered.*/
+	overBudget.clear();            //empty vector.
+	float monthlyAmount = 0;                //get each categories monthly total for this month.
+	for (int i = 0; i < vec.size(); i++) {
+		for (int j = 0; j < master.masterAccount.size(); j++) {   //for each unique category for the current month and year, if the category, month, and year in the master file match add the totals.
+			if (vec[i].category == master.masterAccount[j].category && stoi(master.masterAccount[j].date.substr(0, 2)) == stoi(currentDate.substr(0, 2)) && stoi(master.masterAccount[j].date.substr(master.masterAccount[j].date.length() - 2)) == stoi(currentDate.substr(currentDate.length() - 2))) {
+				monthlyAmount += master.masterAccount[j].amount;
+			}
+		}
+		if (vec[i].type == "I" && monthlyAmount - vec[i].amount > 0) {       //if the difference is more than 0 for income, great, earned more than expected.
+			budgeting fill(vec[i].category, monthlyAmount - vec[i].amount, vec[i].type);  //fill the overBudget vector for that category by the difference for the amount.
+			overBudget.push_back(fill);
+		}
+		else if (vec[i].type == "E" && monthlyAmount - vec[i].amount < 0) {      //if the difference is less than 0 for expenses, warning, spent more than expected.
+			budgeting fill(vec[i].category, abs(monthlyAmount - vec[i].amount), vec[i].type);  //fill the overBudget vector.
+			overBudget.push_back(fill);
+		}
+		monthlyAmount = 0;
+	}
 	writeToFile(vec, budgetFileName);  //update file with new amount.
 
 	cout << endl;
