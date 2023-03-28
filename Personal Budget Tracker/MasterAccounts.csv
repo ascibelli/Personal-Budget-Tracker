@@ -1,11 +1,10 @@
 1/1/2022,SHAWS,Food,-58.65,E,Credit
-1/1/2022,LISA FAMILY PIZZERIA,Take-Out,-28.45,E,Credit
-1/2/2022,BOB MARKET,Food,-7.96,E,Credit
+1/1/2022,LISA FAMILY PIZZERIA,Food,-50,E,Credit
 1/2/2022,PANDA CASTLE,Take-Out,-65.76,E,Credit
 1/3/2022,Geico,Car Insurance,-88.67,E,Checking
-1/4/2022,Amazon.com,Miscellaneous,-250,E,Credit
+1/4/2022,Amazon.com,Miscellaneous,-50,E,Credit
 1/5/2022,Amazon.com,Miscellaneous,-39.81,E,Credit
-1/6/2022,BOB MARKET,Food,-20.42,E,Credit
+1/6/2022,BOBS MARKET,Food,-20.42,E,Credit
 1/7/2022,RICHDALE DAIRY,Food,-16.96,E,Credit
 1/8/2022,THE HOME DEPOT,Miscellaneous,-26.53,E,Credit
 1/8/2022,SHAWS,Food,-65.05,E,Credit
@@ -364,7 +363,7 @@
 10/2/2022,STOP & SHOP,Food,-31,E,Credit
 10/2/2022,RICHDALE DAIRY,Food,-5.99,E,Credit
 10/2/2022,BOB MARKET,Food,-11.46,E,Credit
-10/3/2022,Geico,Car Insurance,-88.5,E,Checking
+10/2/2022,Geico,Car Insurance,-88.5,E,Checking
 10/3/2022,Anytime Fitness,Gym,-12.5,E,Checking
 10/3/2022,Healthcare Provider,Health Care,-28.88,E,Checking
 10/3/2022,BOB MARKET,Food,-19.25,E,Credit
@@ -483,6 +482,7 @@
 12/31/2022,PANDA CASTLE,Take-Out,-23.28,E,Credit
 12/31/2022,DICK'S SPORTING GOODS,Miscellaneous,-59.97,E,Credit
 12/31/2022,TMOBILE,Cell Phone,-15.94,E,Credit
+1/1/2023,BOB MARKET,Food,-7.96,E,Credit
 1/1/2023,STOP & SHOP,Food,-80.71,E,Credit
 1/2/2023,RICHDALE DAIRY,Food,-19.27,E,Credit
 1/3/2023,Geico,Car Insurance,-88.5,E,Checking

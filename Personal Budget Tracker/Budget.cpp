@@ -72,7 +72,7 @@ Budget::Budget(string fileName, string date, Accounts master) {   //stores the b
 		exit(1);  //exit on purpose.
 	}
 	inputFile.close();  //close file
-
+	
 }
 
 
@@ -132,7 +132,7 @@ void Budget::setAmount(string cat, Accounts master) {      //set a budget amount
 			}
 		}
 	}
-	/*Reset the overBudget vector to accounts for new amount entered.*/
+	/*Reset the overBudget vector to account for new amount entered.*/
 	overBudget.clear();            //empty vector.
 	float monthlyAmount = 0;                //get each categories monthly total for this month.
 	for (int i = 0; i < vec.size(); i++) {
@@ -151,6 +151,7 @@ void Budget::setAmount(string cat, Accounts master) {      //set a budget amount
 		}
 		monthlyAmount = 0;
 	}
+
 	writeToFile(vec, budgetFileName);  //update file with new amount.
 
 	cout << endl;

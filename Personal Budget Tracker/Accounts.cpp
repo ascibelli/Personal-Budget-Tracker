@@ -28,7 +28,7 @@ Accounts::Date::Date(int d, int m, int y) {   //constructor for Date struct
 }
 
 
-Accounts::Accounts(float beg, string fileName, string date) {  //constructor for Accounts class.  parameters are beginning cash flow, master account .csv file name, and today's date.
+Accounts::Accounts(float beg, string fileName, string date) {  //constructor for Accounts class.  parameters are beginning cash flow, master account .csv file name, and today's.
 	BEG_CASH_FLOW = beg;
 	accountFileName = fileName;
 	currentDate = date;

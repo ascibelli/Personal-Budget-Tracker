@@ -83,7 +83,7 @@ void SavingFor::editItems(string item) {                //Can change the cost or
 	}
 	cin >> answer;
 	if (size == 1) {
-		while (cin.fail() || answer < 1 || answer > 1) {  //input can't be non integer characters or integers not 1-1.
+		while (cin.fail() || answer != 1) {  //input can't be non integer characters or integers not 1.
 			cout << "Sorry, that is not valid input. Please try again. " << endl;
 			cin.clear();   //clears error if users enters a string.
 			cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
