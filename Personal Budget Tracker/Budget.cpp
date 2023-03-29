@@ -211,7 +211,7 @@ float Budget::calcEndMoCashFlow(float currentCashFlow, Accounts master) {    //c
 			adjustedAmounts -= monthlyTotal - vec[i].amount;               //add the difference to the adjusted amounts.
 		}
 		else if (vec[i].type == "I" && monthlyTotal - vec[i].amount > 0) {       //if the difference is more than 0 for income, great, earned more than expected.
-			budgeting fill(vec[i].category, monthlyTotal - vec[i].amount, vec[i].type);  //fill the overBudget vector for that category by the difference for the amount.
+			budgeting fill(vec[i].category, monthlyTotal - vec[i].amount, vec[i].type);  //fill the overudget vector for that category by the difference for the amount.
 			overBudget.push_back(fill);
 		}
 		else if (vec[i].type == "E" && monthlyTotal - vec[i].amount < 0) {      //if the difference is less than 0 for expenses, warning, spent more than expected.

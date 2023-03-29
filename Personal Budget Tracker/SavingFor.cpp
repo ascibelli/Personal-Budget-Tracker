@@ -198,6 +198,10 @@ void SavingFor::addItems() {   //function to add an object to be saved for.
 			cout << "Sorry, please enter a string of less than 20 characters including spaces. " << endl;  //limit strings to 20 characters.
 			getline(cin, itemName, '\n');
 		}
+		else if (itemName.length() < 1) {
+			cout << "Sorry, the name cannot be blank. Please enter some characters. " << endl;
+			getline(cin, itemName, '\n');
+		}
 		else {
 			break;
 		}
