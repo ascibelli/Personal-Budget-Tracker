@@ -11,7 +11,7 @@ regarding categories they have gone over budget in, as well as contains the menu
 #include <iomanip> 
 using namespace std;
 
-int main()
+int main()  
 {
 	time_t rawtime;   //for use with getting the current day and time.
 	struct tm timeinfo;
