@@ -5,7 +5,7 @@ This allows the user to view, edit, enter, and delete items to save up for.
 It also provides a timetable of when they can finish paying off items they are saving for.*/
 
 #include "SavingFor.h"
-#include <sstream>   //read in .csv file.
+#include <sstream>   //read in .csv file. 
 #include <iostream>
 #include <fstream>   //file input/output
 #include <algorithm>
