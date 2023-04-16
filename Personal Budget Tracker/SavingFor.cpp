@@ -12,7 +12,7 @@ It also provides a timetable of when they can finish paying off items they are s
 #include <iomanip> 
 using namespace std;
 
-SavingFor::savingItems::savingItems(string itm, float cst, int pr) {   //sets savingItems struct field
+SavingFor::savingItems::savingItems(string itm, float cst, int pr) {   //sets savingItems struct field 
 	item = itm;
 	cost = cst;
 	priority = pr;
