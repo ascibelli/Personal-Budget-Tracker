@@ -2,7 +2,7 @@
 SDEV 435-Final Project-Personal Budget Tracker
 This is the main file that instantiates the Accounts, Budget, and SavingFor classes.
 It prints out the user's current cash flow, expected month end cash flow, and notifications 
-regarding categories they have gone over budget in, as well as contains the menu interface.*/
+regarding categories they have gone over budget in, as well as contains the menu interface.*/ 
 
 #include "Accounts.h"
 #include "Budget.h"
