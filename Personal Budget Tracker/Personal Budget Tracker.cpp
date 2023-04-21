@@ -108,7 +108,7 @@ int main()
 						cout << "Sorry, that is not valid input.  Please try again. " << endl;
 						cin.clear();   //clears error if users enters a string.
 						cin.ignore(256, '\n');    //ignores up to 256 characters in the last user input.
-						cin >> category;   //takes new input.
+						cin >> category;   //takes new input. 
 					}
 					cout << endl;
 					master.getCatAllTime(master.uniqueCategories[category - 1]);  //pass in unique category as a string and get all transactions for it.
