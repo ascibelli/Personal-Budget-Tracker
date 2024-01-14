@@ -6,6 +6,26 @@ The “Personal Budget Tracker” program is a personal financial management too
 
 Please see Appendices B and C in the [project documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true) for set up and installation instructions and watch the [video on the data store](https://drive.google.com/file/d/1760KKbHCVGLB1xTt6u1suUfPCyo_FLYK/view?usp=sharing) for additional examples on how to set up the .csv files to run the program (Note-watch in full screen view for the best resolution!). 
 
+### View the [General Walk Through Video](https://drive.google.com/file/d/1YFEUeVaL9SEk1pVSkKJUuEh52O64A9er/view?usp=sharing)
+
+The general walk through video will cover all the screens and usage (Note, longer videos may require some buffer time. View in full screen view for best resolution!) Please also refer to the [project documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true.), which has more usage scenarios and explanations on how the system is put together and how the code works.
+
+### View the [Data Store Video](https://drive.google.com/file/d/1760KKbHCVGLB1xTt6u1suUfPCyo_FLYK/view?usp=sharing)
+
+The data store video will explain how to paste transactions into the master .csv file and how the file should be formatted, and proper set up an usage of the .csv files.
+
+### View the [Data Validation Video](https://drive.google.com/file/d/1_77ghr0FmRnYmrQEQcrAFC9PkeUBYblx/view)
+
+The data and input validation video will explain areas in the code that ensure data is in the correct format and user input is correct (Note, longer videos may require some buffer time. View in full screen view for best resolution!).
+
+### View the [Re-Usable Code Video](https://drive.google.com/file/d/1Eoo11_O7FZjltqMGQm70p_hR0B4OkABd/view?usp=sharing)
+
+The re-usable code video will cover areas in the code that could be re-used in future projects.
+
+### Read the [Project Documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true.)
+
+The project documentation covers usage scenarios, how the program is put together, how the code works, and how to set up an environment to run the program.
+
 #### Main Menu 
 Users are greeted with their current cash flow value and projected month end cash flow values as well as notifications on any categories they have exceeded the expected budgeted amount on, and a menu with options to view historical transaction data, set budgeted amounts and compare actual to budgeted expenses, and enter items to save for and timelines for acquiring those items. 
 
@@ -44,30 +64,6 @@ Users are greeted with their current cash flow value and projected month end cas
 
 ![image](https://user-images.githubusercontent.com/125276001/232312311-cdc08dc1-2696-47b2-8f36-3fee0184afdd.png)
 
-
-
-
-
-
-### Watch the [General Walk Through Video](https://drive.google.com/file/d/1YFEUeVaL9SEk1pVSkKJUuEh52O64A9er/view?usp=sharing)
-
-The general walk through video will cover all the screens and usage (Note, longer videos may require some buffer time. View in full screen view for best resolution!) Please also refer to the [project documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true.), which has more usage scenarios and explanations on how the system is put together and how the code works.
-
-### Watch the [Data Store Video](https://drive.google.com/file/d/1760KKbHCVGLB1xTt6u1suUfPCyo_FLYK/view?usp=sharing)
-
-The data store video will explain how to paste transactions into the master .csv file and how the file should be formatted, and proper set up an usage of the .csv files.
-
-### Watch the [Data Validation Video](https://drive.google.com/file/d/1_77ghr0FmRnYmrQEQcrAFC9PkeUBYblx/view)
-
-The data and input validation video will explain areas in the code that ensure data is in the correct format and user input is correct (Note, longer videos may require some buffer time. View in full screen view for best resolution!).
-
-### Watch the [Re-Usable Code Video](https://drive.google.com/file/d/1Eoo11_O7FZjltqMGQm70p_hR0B4OkABd/view?usp=sharing)
-
-The re-usable code video will cover areas in the code that could be re-used in future projects.
-
-### Read the [Project Documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true.)
-
-The project documentation covers usage scenarios, how the program is put together, how the code works, and how to set up an environment to run the program.
 
 
 
