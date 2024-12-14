@@ -8,7 +8,7 @@ Please see Appendices B and C in the [project documentation](https://docs.google
 
 ### View the [General Walk Through Video](https://drive.google.com/file/d/1YFEUeVaL9SEk1pVSkKJUuEh52O64A9er/view?usp=sharing)
 
-The general walk through video will cover all the screens and usage (Note, longer videos may require some buffer time. View in full screen view for best resolution!) Please also refer to the [project documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true.), which has more usage scenarios and explanations on how the system is put together and how the code works.
+The general walk through video will cover all the screens and usage (Note, longer videos may require some buffer time. View in full screen view for best resolution!) Please also refer to the [project documentation](https://docs.google.com/document/d/15Ng2AxRPfOe_WlBVOnzvvRi-fMWilxdFVaVQ09eT5qo/edit?usp=sharing), which has more usage scenarios and explanations on how the system is put together and how the code works.
 
 ### View the [Data Store Video](https://drive.google.com/file/d/1760KKbHCVGLB1xTt6u1suUfPCyo_FLYK/view?usp=sharing)
 
@@ -22,7 +22,7 @@ The data and input validation video will explain areas in the code that ensure d
 
 The re-usable code video will cover areas in the code that could be re-used in future projects.
 
-### Read the [Project Documentation](https://docs.google.com/document/d/1S-cf_ue1COExs7yJHwRO4eYTnbxouRKp/edit?usp=sharing&ouid=103709849516774408121&rtpof=true&sd=true.)
+### Read the [Project Documentation](https://docs.google.com/document/d/15Ng2AxRPfOe_WlBVOnzvvRi-fMWilxdFVaVQ09eT5qo/edit?usp=sharing)
 
 The project documentation covers usage scenarios, how the program is put together, how the code works, and how to set up an environment to run the program.
 
